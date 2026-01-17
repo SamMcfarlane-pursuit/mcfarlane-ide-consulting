@@ -33,22 +33,6 @@ export default function IntroSection() {
         <Sparkles className="w-4 h-4" />
         <span>Click any planet to explore • Watch them orbit in real-time</span>
       </motion.div>
-
-      <style jsx>{`
-        @keyframes galaxy-shimmer {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-        
-        .animate-pulse {
-          animation: galaxy-shimmer 3s ease infinite;
-          background-size: 200% 200%;
-        }
-      `}</style>
     </motion.div>
   );
 }
