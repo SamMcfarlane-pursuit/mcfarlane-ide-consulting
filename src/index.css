@@ -86,3 +86,59 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* 4K-READY TEXT RENDERING & CLEAN AESTHETICS */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  font-synthesis: none;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 
+    sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+/* Crisp heading typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* High-resolution canvas rendering */
+canvas {
+  image-rendering: high-quality;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Smooth animations for 4K displays */
+* {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Clean selection styling */
+::selection {
+  background: rgba(100, 150, 255, 0.3);
+  color: inherit;
+}
+
+/* Perfect button and interactive text */
+button, a, [role="button"] {
+  -webkit-font-smoothing: antialiased;
+  font-weight: 500;
+}
+
+/* Subpixel antialiasing for light text on dark */
+.dark body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

@@ -1,37 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
-  Calendar, 
-  Tag, 
-  CheckCircle, 
-  Clock, 
-  Lightbulb, 
+import {
+  Calendar,
+  Tag,
+  CheckCircle,
+  Clock,
+  Lightbulb,
   Sparkles,
   Edit,
   Trash2,
   Eye
 } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
 
 export default function ProjectList({ projects, onProjectClick, onEdit, onDelete }) {
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    checkAdminStatus();
-  }, []);
-
-  const checkAdminStatus = async () => {
-    try {
-      const user = await base44.auth.me();
-      setIsAdmin(user.role === 'admin');
-    } catch (error) {
-      console.error('Error checking admin status:', error);
-      setIsAdmin(false);
-    }
-  };
+  // Always admin in standalone mode
+  const isAdmin = true;
 
   const statusIcons = {
     completed: <CheckCircle className="w-4 h-4" />,
@@ -55,7 +41,7 @@ export default function ProjectList({ projects, onProjectClick, onEdit, onDelete
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {projects.map((project, index) => {
         const isBase44App = project.demo_url?.includes('base44.app') || project.demo_url?.includes('base44.com');
-        
+
         return (
           <motion.div
             key={project.id}

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Project } from '@/entities/Project';
 import { motion } from 'framer-motion';
 import { Loader2, Plus } from 'lucide-react';
@@ -7,21 +7,27 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 
+// Landing components
+import GlobeScene from '../components/landing/GlobeScene';
+import IntroAnimation, { HeroText, ScrollIndicator, CinematicOverlay } from '../components/landing/IntroAnimation';
+import TechStackFilter, { techCategories } from '../components/landing/TechStackFilter';
+import StatsPanel from '../components/landing/StatsPanel';
+
+// Portfolio components
 import SphereCanvas from '../components/portfolio/SphereCanvas';
 import ProjectDetail from '../components/portfolio/ProjectDetail';
-import FilterControls from '../components/portfolio/FilterControls';
-import IntroSection from '../components/portfolio/IntroSection';
 import ProjectList from '../components/portfolio/ProjectList';
 
 export default function Portfolio() {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState('All Projects');
+  const [selectedTechCategory, setSelectedTechCategory] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [viewMode, setViewMode] = useState('sphere');
+  const [introComplete, setIntroComplete] = useState(false);
 
   const navigate = useNavigate();
 
@@ -30,32 +36,32 @@ export default function Portfolio() {
   }, []);
 
   useEffect(() => {
-    const handleFocus = () => {
-      loadProjects();
-    };
+    const handleFocus = () => loadProjects();
     window.addEventListener('focus', handleFocus);
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        loadProjects();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
+    return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
   useEffect(() => {
     let filtered = projects;
 
-    if (selectedCategory !== 'All Projects') {
-      filtered = filtered.filter(p => p.category === selectedCategory);
+    // Filter by tech category (map to technology array)
+    if (selectedTechCategory) {
+      const categoryMapping = {
+        web: ['React', 'Next.js', 'Vue', 'JavaScript', 'TypeScript', 'Node.js'],
+        scroll: ['GSAP', 'Framer Motion', 'Lenis', 'Locomotive'],
+        dataviz: ['D3.js', 'Chart.js', 'Recharts', 'Plotly'],
+        audio: ['Web Audio API', 'Tone.js', 'Howler.js'],
+        gesture: ['Touch', 'Drag', 'Swipe', 'Mouse'],
+        ixd: ['UX', 'Interaction', 'Animation', 'Prototype'],
+        ui: ['UI', 'Figma', 'Design System', 'CSS'],
+        webgl: ['Three.js', 'WebGL', 'GLSL', 'Shaders', 'R3F'],
+      };
+      const keywords = categoryMapping[selectedTechCategory] || [];
+      filtered = filtered.filter(p =>
+        p.technologies?.some(tech =>
+          keywords.some(kw => tech.toLowerCase().includes(kw.toLowerCase()))
+        )
+      );
     }
 
     if (selectedStatus !== 'all') {
@@ -63,13 +69,12 @@ export default function Portfolio() {
     }
 
     setFilteredProjects(filtered);
-  }, [selectedCategory, selectedStatus, projects]);
+  }, [selectedTechCategory, selectedStatus, projects]);
 
   const loadProjects = async () => {
     setLoading(true);
     try {
       const data = await Project.list('-year', 1000);
-      console.log('Loaded projects:', data.length);
       setProjects(data);
       setFilteredProjects(data);
     } catch (error) {
@@ -90,134 +95,171 @@ export default function Portfolio() {
       await loadProjects();
     } catch (error) {
       console.error('Error deleting project:', error);
-      alert('Failed to delete project. Please try again.');
     }
     setDeleting(false);
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           className="flex flex-col items-center gap-4"
         >
-          <Loader2 className="w-12 h-12 text-cyan-400 animate-spin" />
-          <p className="text-gray-300 text-sm">Initializing portfolio sphere...</p>
+          <Loader2 className="w-8 h-8 text-white/50 animate-spin" />
+          <p className="text-gray-500 text-sm">Loading...</p>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
-      {/* Futuristic light effects - no dark shadows */}
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10" />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl animate-pulse" 
-           style={{ animationDelay: '1s' }} />
-      
-      {/* Scanline effect for futuristic feel */}
-      <div className="absolute inset-0 pointer-events-none opacity-5"
-           style={{
-             backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)'
-           }} />
+    <IntroAnimation introComplete={introComplete}>
+      <CinematicOverlay />
+      <div className="relative min-h-screen bg-black overflow-hidden">
 
-      <div className="relative z-10 container mx-auto px-4 py-8 max-w-7xl">
-        <IntroSection />
+        {/* Three.js Globe Background */}
+        <Suspense fallback={null}>
+          <GlobeScene onIntroComplete={() => setIntroComplete(true)} />
+        </Suspense>
 
-        <div className="mb-8 flex justify-center gap-4 flex-wrap">
-          <FilterControls
-            selectedCategory={selectedCategory}
-            selectedStatus={selectedStatus}
-            onCategoryChange={setSelectedCategory}
-            onStatusChange={setSelectedStatus}
-            projectCount={filteredProjects.length}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-          />
-          
-          <Link to={createPageUrl('AddProject')}>
-            <Button className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-lg shadow-purple-500/30">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Project
-            </Button>
-          </Link>
-        </div>
+        {/* Stats Panel */}
+        <StatsPanel projectCount={projects.length} />
 
-        {filteredProjects.length === 0 ? (
+        {/* Main Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+
+          {/* Hero Section */}
+          <div className="pt-20 pb-12">
+            <HeroText
+              title="Samuel McFarlane"
+              subtitle="Creative Developer crafting immersive digital experiences through code, design, and interaction"
+              tagline="Click any project to explore • Scroll to discover more"
+            />
+          </div>
+
+          {/* Tech Stack Filter */}
+          <div className="w-full max-w-5xl mb-12">
+            <TechStackFilter
+              selectedCategory={selectedTechCategory}
+              onCategoryChange={setSelectedTechCategory}
+            />
+          </div>
+
+          {/* Projects Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.5, duration: 0.8 }}
+            className="w-full max-w-7xl"
+          >
+            {/* Controls Bar */}
+            <div className="flex items-center justify-between mb-8 px-4">
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-gray-500">
+                  {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}
+                </span>
+
+                {/* View Mode Toggle */}
+                <div className="flex gap-1 bg-white/5 rounded-lg p-1">
+                  {['sphere', 'grid'].map((mode) => (
+                    <button
+                      key={mode}
+                      onClick={() => setViewMode(mode)}
+                      className={`px-3 py-1.5 text-xs rounded-md transition-all ${viewMode === mode
+                        ? 'bg-white/10 text-white'
+                        : 'text-gray-500 hover:text-gray-300'
+                        }`}
+                    >
+                      {mode === 'sphere' ? '3D' : 'Grid'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <Link to={createPageUrl('AddProject')}>
+                <Button className="bg-white/10 hover:bg-white/20 text-white border-0 backdrop-blur-sm">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Project
+                </Button>
+              </Link>
+            </div>
+
+            {/* Projects Display */}
+            {filteredProjects.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-20"
+              >
+                <p className="text-gray-500 mb-6">
+                  {selectedTechCategory
+                    ? 'No projects match this category yet.'
+                    : 'No projects found.'}
+                </p>
+                <Link to={createPageUrl('AddProject')}>
+                  <Button className="bg-white/10 hover:bg-white/20 text-white border border-white/20">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Your First Project
+                  </Button>
+                </Link>
+              </motion.div>
+            ) : viewMode === 'sphere' ? (
+              <div
+                className="w-full rounded-2xl overflow-hidden border border-white/10"
+                style={{
+                  height: 'calc(100vh - 500px)',
+                  minHeight: '400px',
+                  maxHeight: '600px',
+                  background: 'rgba(0,0,0,0.3)',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                <SphereCanvas
+                  projects={filteredProjects}
+                  onProjectClick={setSelectedProject}
+                  selectedProject={selectedProject}
+                  filterCategory={selectedTechCategory}
+                />
+              </div>
+            ) : (
+              <ProjectList
+                projects={filteredProjects}
+                onProjectClick={setSelectedProject}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            )}
+          </motion.div>
+
+          {/* Status Legend */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-20"
+            transition={{ delay: 2 }}
+            className="py-12 flex items-center gap-8 text-xs text-gray-500"
           >
-            <p className="text-gray-300 text-lg mb-4">
-              {selectedCategory !== 'All Projects' || selectedStatus !== 'all' 
-                ? 'No projects match your filters.' 
-                : 'No projects found.'}
-            </p>
-            <Link to={createPageUrl('AddProject')}>
-              <Button className="bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 shadow-lg shadow-cyan-500/30">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Your First Project
-              </Button>
-            </Link>
-          </motion.div>
-        ) : viewMode === 'sphere' ? (
-          <motion.div
-            key={filteredProjects.length}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="w-full rounded-3xl overflow-hidden border border-cyan-500/30 shadow-2xl shadow-cyan-500/20"
-            style={{
-              height: 'calc(100vh - 400px)',
-              minHeight: '650px',
-              maxHeight: '850px',
-              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.5) 100%)',
-              backdropFilter: 'blur(20px)'
-            }}
-          >
-            <SphereCanvas
-              projects={filteredProjects}
-              onProjectClick={setSelectedProject}
-              selectedProject={selectedProject}
-              filterCategory={selectedCategory}
-            />
-          </motion.div>
-        ) : (
-          <ProjectList
-            projects={filteredProjects}
-            onProjectClick={setSelectedProject}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        )}
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-12 text-center space-y-4"
-        >
-          <div className="inline-flex items-center gap-8 text-sm text-gray-400 flex-wrap justify-center">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50" />
+              <div className="w-2 h-2 rounded-full bg-emerald-400" />
               <span>Completed</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-cyan-400 shadow-lg shadow-cyan-400/50" />
+              <div className="w-2 h-2 rounded-full bg-cyan-400" />
               <span>In Progress</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-purple-400 shadow-lg shadow-purple-400/50" />
+              <div className="w-2 h-2 rounded-full bg-purple-400" />
               <span>Planning</span>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Scroll Indicator */}
+        {projects.length === 0 && <ScrollIndicator />}
       </div>
 
+      {/* Project Detail Modal */}
       {selectedProject && (
         <ProjectDetail
           project={selectedProject}
@@ -227,6 +269,6 @@ export default function Portfolio() {
           deleting={deleting}
         />
       )}
-    </div>
+    </IntroAnimation>
   );
 }

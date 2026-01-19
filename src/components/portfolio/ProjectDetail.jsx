@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Github, Calendar, Tag, CheckCircle, Clock, Lightbulb, Download, Monitor, Star, GitFork, Sparkles, Edit, Trash2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,25 +17,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import ReactMarkdown from 'react-markdown';
-import { base44 } from '@/api/base44Client';
 
 export default function ProjectDetail({ project, onClose, onEdit, onDelete, deleting }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    checkAdminStatus();
-  }, []);
-
-  const checkAdminStatus = async () => {
-    try {
-      const user = await base44.auth.me();
-      setIsAdmin(user.role === 'admin');
-    } catch (error) {
-      console.error('Error checking admin status:', error);
-      setIsAdmin(false);
-    }
-  };
+  // Always admin in standalone mode
+  const isAdmin = true;
 
   if (!project) return null;
 
@@ -207,7 +193,7 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
                             key={index}
                             variant="outline"
                             className={
-                              tech.toLowerCase() === 'base44' 
+                              tech.toLowerCase() === 'base44'
                                 ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/50"
                                 : "bg-cyan-500/10 text-cyan-300 border-cyan-500/30"
                             }
@@ -356,13 +342,13 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
               Delete Project?
             </AlertDialogTitle>
             <AlertDialogDescription className="text-gray-400">
-              Are you sure you want to delete <strong className="text-white">"{project.title}"</strong>? 
+              Are you sure you want to delete <strong className="text-white">"{project.title}"</strong>?
               <br />
               <span className="text-red-400 font-semibold">This action cannot be undone.</span>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel 
+            <AlertDialogCancel
               className="bg-slate-800 border-slate-700 text-white hover:bg-slate-700"
               disabled={deleting}
             >
