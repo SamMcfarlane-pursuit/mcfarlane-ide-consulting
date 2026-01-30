@@ -125,7 +125,7 @@ export default function Portfolio() {
         </Suspense>
 
         {/* Stats Panel */}
-        <StatsPanel projectCount={projects.length} />
+        <StatsPanel projectCount={projects.length} techCount={15} yearsExp={1} />
 
         {/* Main Content */}
         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
@@ -134,8 +134,8 @@ export default function Portfolio() {
           <div className="pt-20 pb-12">
             <HeroText
               title="Samuel McFarlane"
-              subtitle="Creative Developer crafting immersive digital experiences through code, design, and interaction"
-              tagline="Click any project to explore • Scroll to discover more"
+              subtitle="AI/ML Engineer & Full-Stack Developer building intelligent systems from first principles — from Rust backends to custom LLMs"
+              tagline="Brooklyn-based • Pursuit AI Native Program • Click any project to explore"
             />
           </div>
 
@@ -157,19 +157,19 @@ export default function Portfolio() {
             {/* Controls Bar */}
             <div className="flex items-center justify-between mb-8 px-4">
               <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-amber-400/60 font-medium">
                   {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}
                 </span>
 
                 {/* View Mode Toggle */}
-                <div className="flex gap-1 bg-white/5 rounded-lg p-1">
+                <div className="flex gap-1 bg-slate-800/50 backdrop-blur-sm rounded-lg p-1 border border-amber-500/20">
                   {['sphere', 'grid'].map((mode) => (
                     <button
                       key={mode}
                       onClick={() => setViewMode(mode)}
-                      className={`px-3 py-1.5 text-xs rounded-md transition-all ${viewMode === mode
-                        ? 'bg-white/10 text-white'
-                        : 'text-gray-500 hover:text-gray-300'
+                      className={`px-4 py-1.5 text-xs font-medium rounded-md transition-all duration-300 ${viewMode === mode
+                        ? 'bg-gradient-to-r from-amber-500/30 to-yellow-500/20 text-amber-200 shadow-lg shadow-amber-500/20 border border-amber-400/40'
+                        : 'text-gray-400 hover:text-amber-300 hover:bg-amber-500/10 border border-transparent'
                         }`}
                     >
                       {mode === 'sphere' ? '3D' : 'Grid'}
@@ -179,7 +179,7 @@ export default function Portfolio() {
               </div>
 
               <Link to={createPageUrl('AddProject')}>
-                <Button className="bg-white/10 hover:bg-white/20 text-white border-0 backdrop-blur-sm">
+                <Button className="bg-gradient-to-r from-amber-500/20 to-yellow-500/15 hover:from-amber-500/30 hover:to-yellow-500/25 text-amber-200 border border-amber-400/40 hover:border-amber-400/60 backdrop-blur-sm shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20 transition-all duration-300">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Project
                 </Button>
@@ -191,19 +191,24 @@ export default function Portfolio() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center py-20"
+                className="text-center py-16"
               >
-                <p className="text-gray-500 mb-6">
-                  {selectedTechCategory
-                    ? 'No projects match this category yet.'
-                    : 'No projects found.'}
-                </p>
-                <Link to={createPageUrl('AddProject')}>
-                  <Button className="bg-white/10 hover:bg-white/20 text-white border border-white/20">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Your First Project
-                  </Button>
-                </Link>
+                <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-12 border border-amber-500/20 shadow-lg shadow-amber-500/5 max-w-md mx-auto">
+                  <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-amber-500/20 to-yellow-500/10 flex items-center justify-center border border-amber-500/30">
+                    <Plus className="w-8 h-8 text-amber-400" />
+                  </div>
+                  <p className="text-gray-400 mb-6 text-lg">
+                    {selectedTechCategory
+                      ? 'No projects match this category yet.'
+                      : 'Your portfolio awaits its first masterpiece.'}
+                  </p>
+                  <Link to={createPageUrl('AddProject')}>
+                    <Button className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-900 font-semibold shadow-lg shadow-amber-500/25 px-8 py-3">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Your First Project
+                    </Button>
+                  </Link>
+                </div>
               </motion.div>
             ) : viewMode === 'sphere' ? (
               <div
@@ -238,19 +243,19 @@ export default function Portfolio() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2 }}
-            className="py-12 flex items-center gap-8 text-xs text-gray-500"
+            className="py-12 flex items-center gap-8 text-xs"
           >
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-400" />
-              <span>Completed</span>
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50" />
+              <span className="text-emerald-300/80 font-medium">Completed</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-cyan-400" />
-              <span>In Progress</span>
+              <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-lg shadow-cyan-400/50" />
+              <span className="text-cyan-300/80 font-medium">In Progress</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-purple-400" />
-              <span>Planning</span>
+              <div className="w-2.5 h-2.5 rounded-full bg-purple-400 shadow-lg shadow-purple-400/50" />
+              <span className="text-purple-300/80 font-medium">Planning</span>
             </div>
           </motion.div>
         </div>

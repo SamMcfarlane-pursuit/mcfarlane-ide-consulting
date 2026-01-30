@@ -58,31 +58,31 @@ function CinematicCamera({ animationProgress, introComplete, setIntroComplete })
     return null;
 }
 
-// Unified color palette - ELEGANT WHITE & GOLD THEME
+// Unified color palette - BRIGHT WHITE & GOLD THEME
 const COLORS = {
-    // Core nucleus - warm white to gold gradient
-    core: '#fffef8',          // Warm white core
-    coreGlow: '#ffd700',      // Pure gold glow
-    midGlow: '#e8c547',       // Champagne gold
-    outerGlow: '#c9a227',     // Deep amber gold
+    // Core nucleus - brilliant white to bright gold
+    core: '#ffffff',          // Pure brilliant white
+    coreGlow: '#ffdd44',      // Bright vibrant gold
+    midGlow: '#ffc933',       // Vivid champagne gold
+    outerGlow: '#ffb700',     // Bright amber gold
 
-    // Electrons - brilliant white with gold trails
+    // Electrons - pure white with bright gold trails
     electron: '#ffffff',      // Pure white electrons
-    electronGlow: '#fff4d6',  // Soft cream glow
-    electronTrail: '#ffd54f', // Gold trail
+    electronGlow: '#fffacd',  // Lemon chiffon glow
+    electronTrail: '#ffe066', // Bright gold trail
 
-    // Orbit rings - subtle gold
-    orbit: '#b8860b',         // Dark goldenrod orbits
-    orbitGlow: '#daa520',     // Goldenrod
+    // Orbit rings - vibrant gold
+    orbit: '#daa520',         // Goldenrod orbits
+    orbitGlow: '#ffd700',     // Pure gold
 
-    // Globe particles - white to gold spectrum
-    particle: '#fffef5',      // Warm white particles
-    particleGold: '#ffeaa7',  // Light gold particles
-    particleDeep: '#f5d061',  // Deeper gold accent
+    // Globe particles - bright white to gold spectrum
+    particle: '#ffffff',      // Pure white particles
+    particleGold: '#fff2b3',  // Bright light gold particles
+    particleDeep: '#ffd54f',  // Vivid gold accent
 
-    // Ambient atmosphere
-    atmosphere: '#2a2015',    // Dark warm ambient
-    atmosphereGlow: '#3d2e1c',// Warm brown-gold ambient
+    // Ambient atmosphere - warm deep black
+    atmosphere: '#0a0908',    // Warm charcoal-black
+    atmosphereGlow: '#14120f',// Dark warm ambient
 };
 
 // REALISTIC CLUSTERED NUCLEUS - Like protons/neutrons
@@ -384,13 +384,13 @@ function ParticleGlobe({ mousePosition, introComplete, animationProgress }) {
             positions[i * 3 + 1] = sy;
             positions[i * 3 + 2] = sz;
 
-            // Colors - WHITE to GOLD gradient for stunning gold theme
+            // Colors - BRIGHT WHITE to GOLD gradient
             const heightFactor = (ty + radius) / (radius * 2);
-            const intensity = 0.75 + Math.random() * 0.25;
-            // White-gold gradient: warm white at top, golden at bottom
-            colors[i * 3] = intensity * (0.95 + heightFactor * 0.05);       // High red (warm)
-            colors[i * 3 + 1] = intensity * (0.85 + heightFactor * 0.10);   // Med-high green (gold tone)
-            colors[i * 3 + 2] = intensity * (0.60 + heightFactor * 0.20);   // Lower blue (warm gold)
+            const intensity = 0.85 + Math.random() * 0.15;
+            // Bright white-gold gradient: brilliant white at top, golden at bottom
+            colors[i * 3] = intensity * (0.98 + heightFactor * 0.02);       // Near-full red (bright)
+            colors[i * 3 + 1] = intensity * (0.90 + heightFactor * 0.08);   // High green (light gold)
+            colors[i * 3 + 2] = intensity * (0.55 + heightFactor * 0.25);   // Lower blue (vivid gold)
         }
 
         return { positions, targetPositions, colors };
@@ -672,7 +672,7 @@ export default function GlobeScene({ onIntroComplete }) {
             ref={containerRef}
             className="absolute inset-0 z-0"
             style={{
-                background: 'radial-gradient(ellipse at 50% 30%, #1a1408 0%, #0d0a04 50%, #050402 100%)'
+                background: 'radial-gradient(ellipse at 50% 30%, #100d08 0%, #0a0806 50%, #040302 100%)'
             }}
         >
             <Canvas
@@ -717,7 +717,7 @@ export default function GlobeScene({ onIntroComplete }) {
             <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
-                    background: 'radial-gradient(circle at 50% 35%, rgba(255, 200, 100, 0.08) 0%, transparent 45%)'
+                    background: 'radial-gradient(circle at 50% 35%, rgba(255, 215, 0, 0.12) 0%, transparent 50%)'
                 }}
             />
         </div>

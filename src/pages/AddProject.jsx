@@ -69,9 +69,9 @@ export default function AddProject() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-purple-500/5" />
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-yellow-500/5" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl" />
 
       <div className="relative z-10 container mx-auto px-4 py-12 max-w-4xl">
         <motion.div
@@ -100,15 +100,15 @@ export default function AddProject() {
               <React.Fragment key={num}>
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${step >= num
-                      ? 'bg-cyan-500 text-white'
-                      : 'bg-slate-800 text-gray-500'
+                    ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-900 shadow-lg shadow-amber-500/30'
+                    : 'bg-slate-800 text-gray-500'
                     }`}
                 >
                   {num}
                 </div>
                 {num < 3 && (
                   <div
-                    className={`w-16 h-1 transition-all ${step > num ? 'bg-cyan-500' : 'bg-slate-800'
+                    className={`w-16 h-1 transition-all ${step > num ? 'bg-gradient-to-r from-amber-500 to-yellow-500' : 'bg-slate-800'
                       }`}
                   />
                 )}
@@ -128,7 +128,7 @@ export default function AddProject() {
               <TabsList className="grid w-full grid-cols-2 bg-slate-800 mb-6">
                 <TabsTrigger
                   value="github"
-                  className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300"
+                  className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300"
                 >
                   <Github className="w-4 h-4 mr-2" />
                   <span className="hidden sm:inline">GitHub</span>
@@ -136,7 +136,7 @@ export default function AddProject() {
                 </TabsTrigger>
                 <TabsTrigger
                   value="files"
-                  className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300"
+                  className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300"
                 >
                   <Upload className="w-4 h-4 mr-2" />
                   <span>Files</span>

@@ -17,19 +17,23 @@ export default function IntroAnimation({ children, introComplete }) {
 // Hero text component with staggered animation - synced with camera
 export function HeroText({ title, subtitle, tagline }) {
     return (
-        <div className="text-center space-y-6">
+        <div className="text-center space-y-8">
             {/* Main title - appears after camera starts pulling back */}
             <motion.h1
                 initial={{ opacity: 0, y: 40, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{
-                    delay: 1.5, // Wait for camera to pull back a bit
+                    delay: 1.5,
                     duration: 1.2,
-                    ease: [0.25, 0.46, 0.45, 0.94] // Custom easing
+                    ease: [0.25, 0.46, 0.45, 0.94]
                 }}
-                className="text-5xl md:text-7xl lg:text-8xl font-extralight text-white tracking-tight"
+                className="text-5xl md:text-7xl lg:text-8xl font-extralight tracking-tight"
                 style={{
-                    textShadow: '0 0 80px rgba(100, 150, 200, 0.3)'
+                    background: 'linear-gradient(135deg, #FFFFFF 0%, #FCD34D 50%, #F59E0B 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    textShadow: '0 0 120px rgba(251, 191, 36, 0.4), 0 0 60px rgba(245, 158, 11, 0.3)'
                 }}
             >
                 {title}
@@ -44,18 +48,18 @@ export function HeroText({ title, subtitle, tagline }) {
                     duration: 1,
                     ease: 'easeOut'
                 }}
-                className="text-lg md:text-xl lg:text-2xl text-gray-400 font-light max-w-3xl mx-auto leading-relaxed"
+                className="text-lg md:text-xl lg:text-2xl text-gray-300 font-light max-w-3xl mx-auto leading-relaxed"
             >
                 {subtitle}
             </motion.p>
 
-            {/* Tagline - appears last */}
+            {/* Tagline - appears last with amber accent */}
             {tagline && (
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 3.2, duration: 0.8 }}
-                    className="text-sm text-gray-500 tracking-wide"
+                    className="text-sm text-amber-400/70 tracking-widest uppercase font-medium"
                 >
                     {tagline}
                 </motion.p>
@@ -118,11 +122,11 @@ export function CinematicOverlay() {
                 className="fixed inset-0 bg-black pointer-events-none z-50"
             />
 
-            {/* Vignette effect */}
+            {/* Vignette effect - warm amber tint at edges */}
             <div
                 className="fixed inset-0 pointer-events-none z-40"
                 style={{
-                    background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%)'
+                    background: 'radial-gradient(ellipse at center, transparent 40%, rgba(10,8,6,0.5) 80%, rgba(8,6,4,0.7) 100%)'
                 }}
             />
         </>

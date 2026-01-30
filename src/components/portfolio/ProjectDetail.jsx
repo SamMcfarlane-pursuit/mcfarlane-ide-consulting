@@ -67,7 +67,7 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
           onClick={(e) => e.stopPropagation()}
           className="w-full max-w-4xl max-h-[90vh] overflow-y-auto my-8"
         >
-          <Card className="bg-gradient-to-br from-slate-900/95 to-slate-800/95 border-slate-700/50 backdrop-blur-xl shadow-2xl">
+          <Card className="bg-gradient-to-br from-slate-900/95 to-slate-800/95 border-amber-500/20 backdrop-blur-xl shadow-2xl shadow-amber-500/5">
             <div className="p-8 space-y-6">
               {/* Header */}
               <div className="flex items-start justify-between">
@@ -154,22 +154,22 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
 
               {/* Tabs */}
               <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="bg-slate-800 border-slate-700">
-                  <TabsTrigger value="overview" className="data-[state=active]:bg-cyan-500/20">
+                <TabsList className="bg-slate-800/80 border-slate-700">
+                  <TabsTrigger value="overview" className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300">
                     Overview
                   </TabsTrigger>
                   {project.readme_content && (
-                    <TabsTrigger value="docs" className="data-[state=active]:bg-cyan-500/20">
+                    <TabsTrigger value="docs" className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300">
                       Documentation
                     </TabsTrigger>
                   )}
                   {project.project_files && project.project_files.length > 0 && (
-                    <TabsTrigger value="files" className="data-[state=active]:bg-cyan-500/20">
+                    <TabsTrigger value="files" className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300">
                       Files ({project.project_files.length})
                     </TabsTrigger>
                   )}
                   {project.screenshots && project.screenshots.length > 0 && (
-                    <TabsTrigger value="gallery" className="data-[state=active]:bg-cyan-500/20">
+                    <TabsTrigger value="gallery" className="data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300">
                       Gallery
                     </TabsTrigger>
                   )}
@@ -194,8 +194,8 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
                             variant="outline"
                             className={
                               tech.toLowerCase() === 'base44'
-                                ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/50"
-                                : "bg-cyan-500/10 text-cyan-300 border-cyan-500/30"
+                                ? "bg-amber-500/20 text-amber-300 border-amber-500/50"
+                                : "bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20 transition-colors"
                             }
                           >
                             {tech}
@@ -213,7 +213,7 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
                       <ul className="space-y-2">
                         {project.highlights.map((highlight, index) => (
                           <li key={index} className="flex items-start gap-2 text-gray-300">
-                            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-2 flex-shrink-0" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 flex-shrink-0" />
                             <span>{highlight}</span>
                           </li>
                         ))}
@@ -241,7 +241,7 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
                           className="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg hover:bg-slate-800 transition-colors"
                         >
                           <div className="flex items-center gap-3">
-                            <Download className="w-5 h-5 text-cyan-400" />
+                            <Download className="w-5 h-5 text-amber-400" />
                             <div>
                               <p className="text-white font-medium">{file.name}</p>
                               <p className="text-xs text-gray-500">{file.type}</p>
@@ -269,7 +269,7 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
                           key={index}
                           src={screenshot}
                           alt={`Screenshot ${index + 1}`}
-                          className="rounded-lg border border-slate-700 hover:border-cyan-500 transition-colors"
+                          className="rounded-lg border border-slate-700 hover:border-amber-500 transition-colors"
                         />
                       ))}
                     </div>
@@ -286,7 +286,7 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
                     rel="noopener noreferrer"
                     className="flex-1 min-w-[200px]"
                   >
-                    <Button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white">
+                    <Button className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-900 font-semibold shadow-lg shadow-amber-500/25">
                       {isBase44App ? (
                         <>
                           <Sparkles className="w-4 h-4 mr-2" />
@@ -308,7 +308,7 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
                     rel="noopener noreferrer"
                     className="flex-1 min-w-[200px]"
                   >
-                    <Button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white">
+                    <Button className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-900 font-semibold shadow-lg shadow-amber-500/25">
                       <ExternalLink className="w-4 h-4 mr-2" />
                       View Project
                     </Button>

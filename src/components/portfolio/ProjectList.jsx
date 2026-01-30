@@ -49,7 +49,7 @@ export default function ProjectList({ projects, onProjectClick, onEdit, onDelete
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
           >
-            <Card className="bg-slate-900/50 border-slate-700 hover:border-cyan-500/50 transition-all duration-300 h-full">
+            <Card className="bg-slate-900/50 border-slate-700/50 hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/10 transition-all duration-300 h-full group">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
@@ -89,7 +89,7 @@ export default function ProjectList({ projects, onProjectClick, onEdit, onDelete
                 {project.technologies && project.technologies.length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-4">
                     {project.technologies.slice(0, 3).map((tech, idx) => (
-                      <Badge key={idx} variant="outline" className="text-xs bg-cyan-500/5 text-cyan-300 border-cyan-500/30">
+                      <Badge key={idx} variant="outline" className="text-xs bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20 transition-colors">
                         {tech}
                       </Badge>
                     ))}
@@ -106,7 +106,7 @@ export default function ProjectList({ projects, onProjectClick, onEdit, onDelete
                     variant="ghost"
                     size="sm"
                     onClick={() => onProjectClick(project)}
-                    className="flex-1 text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10"
+                    className="flex-1 text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/30"
                   >
                     <Eye className="w-4 h-4 mr-1" />
                     View

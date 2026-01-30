@@ -17,8 +17,8 @@ export default function GitHubImporter({ onImportComplete }) {
   const isValidGitHubUrl = (url) => {
     // More flexible validation
     const cleanUrl = url.trim().toLowerCase();
-    return cleanUrl.includes('github.com/') && 
-           cleanUrl.split('/').length >= 5; // Must have owner and repo
+    return cleanUrl.includes('github.com/') &&
+      cleanUrl.split('/').length >= 5; // Must have owner and repo
   };
 
   const importFromGitHub = async () => {
@@ -105,7 +105,7 @@ If there are demo links or live deployments mentioned in the README, note them.`
       };
 
       onImportComplete(projectData);
-      
+
     } catch (err) {
       console.error('GitHub import error:', err);
       setError('Failed to import repository. Please check the URL and try again, or add the project manually.');
@@ -126,10 +126,10 @@ If there are demo links or live deployments mentioned in the README, note them.`
   };
 
   return (
-    <Card className="bg-slate-900/50 border-slate-700">
+    <Card className="bg-slate-900/50 border-amber-500/20 hover:border-amber-500/30 transition-colors">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white">
-          <Github className="w-5 h-5 text-purple-400" />
+          <Github className="w-5 h-5 text-amber-400" />
           Import from GitHub
         </CardTitle>
       </CardHeader>
@@ -170,7 +170,7 @@ If there are demo links or live deployments mentioned in the README, note them.`
             animate={{ opacity: 1 }}
             className="space-y-3"
           >
-            <div className="flex items-center gap-3 text-purple-400">
+            <div className="flex items-center gap-3 text-amber-400">
               <Loader2 className="w-5 h-5 animate-spin" />
               <span className="text-sm">{progress}</span>
             </div>
@@ -180,7 +180,7 @@ If there are demo links or live deployments mentioned in the README, note them.`
         <Button
           onClick={importFromGitHub}
           disabled={importing || !repoUrl.trim()}
-          className="w-full bg-purple-500 hover:bg-purple-600"
+          className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-900 font-semibold shadow-lg shadow-amber-500/25"
         >
           {importing ? (
             <>

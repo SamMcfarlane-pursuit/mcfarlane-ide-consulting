@@ -2,25 +2,26 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const techCategories = [
-    { id: 'web', label: 'Web & Interactive', color: 'cyan' },
-    { id: 'scroll', label: 'Scrolling', color: 'purple' },
+    { id: 'web', label: 'Web & Interactive', color: 'amber' },
+    { id: 'scroll', label: 'Scrolling', color: 'yellow' },
     { id: 'dataviz', label: 'Data Visualization', color: 'emerald' },
     { id: 'audio', label: 'Sound & Audio', color: 'pink' },
-    { id: 'gesture', label: 'Gestures / Interaction', color: 'amber' },
+    { id: 'gesture', label: 'Gestures / Interaction', color: 'orange' },
     { id: 'ixd', label: 'Interaction Design', color: 'blue' },
     { id: 'ui', label: 'UI Design', color: 'violet' },
     { id: 'webgl', label: 'WebGL / Three.js', color: 'teal' },
 ];
 
 const colorClasses = {
-    cyan: 'hover:bg-cyan-500/20 hover:border-cyan-500/50 data-[active=true]:bg-cyan-500/20 data-[active=true]:border-cyan-500/50 data-[active=true]:text-cyan-300',
-    purple: 'hover:bg-purple-500/20 hover:border-purple-500/50 data-[active=true]:bg-purple-500/20 data-[active=true]:border-purple-500/50 data-[active=true]:text-purple-300',
-    emerald: 'hover:bg-emerald-500/20 hover:border-emerald-500/50 data-[active=true]:bg-emerald-500/20 data-[active=true]:border-emerald-500/50 data-[active=true]:text-emerald-300',
-    pink: 'hover:bg-pink-500/20 hover:border-pink-500/50 data-[active=true]:bg-pink-500/20 data-[active=true]:border-pink-500/50 data-[active=true]:text-pink-300',
-    amber: 'hover:bg-amber-500/20 hover:border-amber-500/50 data-[active=true]:bg-amber-500/20 data-[active=true]:border-amber-500/50 data-[active=true]:text-amber-300',
-    blue: 'hover:bg-blue-500/20 hover:border-blue-500/50 data-[active=true]:bg-blue-500/20 data-[active=true]:border-blue-500/50 data-[active=true]:text-blue-300',
-    violet: 'hover:bg-violet-500/20 hover:border-violet-500/50 data-[active=true]:bg-violet-500/20 data-[active=true]:border-violet-500/50 data-[active=true]:text-violet-300',
-    teal: 'hover:bg-teal-500/20 hover:border-teal-500/50 data-[active=true]:bg-teal-500/20 data-[active=true]:border-teal-500/50 data-[active=true]:text-teal-300',
+    amber: 'hover:bg-amber-500/30 hover:border-amber-400/60 hover:shadow-lg hover:shadow-amber-500/20 data-[active=true]:bg-gradient-to-r data-[active=true]:from-amber-500/30 data-[active=true]:to-yellow-500/20 data-[active=true]:border-amber-400/70 data-[active=true]:text-amber-200 data-[active=true]:shadow-lg data-[active=true]:shadow-amber-500/25',
+    yellow: 'hover:bg-yellow-500/30 hover:border-yellow-400/60 hover:shadow-lg hover:shadow-yellow-500/20 data-[active=true]:bg-gradient-to-r data-[active=true]:from-yellow-500/30 data-[active=true]:to-amber-500/20 data-[active=true]:border-yellow-400/70 data-[active=true]:text-yellow-200 data-[active=true]:shadow-lg data-[active=true]:shadow-yellow-500/25',
+    purple: 'hover:bg-purple-500/30 hover:border-purple-400/60 hover:shadow-lg hover:shadow-purple-500/20 data-[active=true]:bg-gradient-to-r data-[active=true]:from-purple-500/30 data-[active=true]:to-pink-500/20 data-[active=true]:border-purple-400/70 data-[active=true]:text-purple-200 data-[active=true]:shadow-lg data-[active=true]:shadow-purple-500/25',
+    emerald: 'hover:bg-emerald-500/30 hover:border-emerald-400/60 hover:shadow-lg hover:shadow-emerald-500/20 data-[active=true]:bg-gradient-to-r data-[active=true]:from-emerald-500/30 data-[active=true]:to-teal-500/20 data-[active=true]:border-emerald-400/70 data-[active=true]:text-emerald-200 data-[active=true]:shadow-lg data-[active=true]:shadow-emerald-500/25',
+    pink: 'hover:bg-pink-500/30 hover:border-pink-400/60 hover:shadow-lg hover:shadow-pink-500/20 data-[active=true]:bg-gradient-to-r data-[active=true]:from-pink-500/30 data-[active=true]:to-rose-500/20 data-[active=true]:border-pink-400/70 data-[active=true]:text-pink-200 data-[active=true]:shadow-lg data-[active=true]:shadow-pink-500/25',
+    orange: 'hover:bg-orange-500/30 hover:border-orange-400/60 hover:shadow-lg hover:shadow-orange-500/20 data-[active=true]:bg-gradient-to-r data-[active=true]:from-orange-500/30 data-[active=true]:to-amber-500/20 data-[active=true]:border-orange-400/70 data-[active=true]:text-orange-200 data-[active=true]:shadow-lg data-[active=true]:shadow-orange-500/25',
+    blue: 'hover:bg-blue-500/30 hover:border-blue-400/60 hover:shadow-lg hover:shadow-blue-500/20 data-[active=true]:bg-gradient-to-r data-[active=true]:from-blue-500/30 data-[active=true]:to-cyan-500/20 data-[active=true]:border-blue-400/70 data-[active=true]:text-blue-200 data-[active=true]:shadow-lg data-[active=true]:shadow-blue-500/25',
+    violet: 'hover:bg-violet-500/30 hover:border-violet-400/60 hover:shadow-lg hover:shadow-violet-500/20 data-[active=true]:bg-gradient-to-r data-[active=true]:from-violet-500/30 data-[active=true]:to-purple-500/20 data-[active=true]:border-violet-400/70 data-[active=true]:text-violet-200 data-[active=true]:shadow-lg data-[active=true]:shadow-violet-500/25',
+    teal: 'hover:bg-teal-500/30 hover:border-teal-400/60 hover:shadow-lg hover:shadow-teal-500/20 data-[active=true]:bg-gradient-to-r data-[active=true]:from-teal-500/30 data-[active=true]:to-cyan-500/20 data-[active=true]:border-teal-400/70 data-[active=true]:text-teal-200 data-[active=true]:shadow-lg data-[active=true]:shadow-teal-500/25',
 };
 
 export default function TechStackFilter({ selectedCategory, onCategoryChange }) {
