@@ -57,6 +57,15 @@ export default function Layout({ children }) {
               >
                 <span className="hidden sm:inline font-medium">About</span>
               </Link>
+              <Link
+                to={createPageUrl('Contact')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${currentPath === '/Contact'
+                  ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-900 shadow-lg shadow-amber-500/30 border border-amber-400'
+                  : 'bg-gradient-to-r from-amber-500/20 to-yellow-500/15 text-amber-300 hover:from-amber-500/30 hover:to-yellow-500/25 border border-amber-400/40 hover:border-amber-400/60'
+                  }`}
+              >
+                <span className="font-semibold">Hire Me</span>
+              </Link>
             </nav>
           </div>
         </div>

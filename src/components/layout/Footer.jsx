@@ -27,6 +27,7 @@ export default function Footer() {
     const navLinks = [
         { label: 'Portfolio', path: 'Portfolio' },
         { label: 'About', path: 'About' },
+        { label: 'Contact', path: 'Contact' },
         { label: 'Add Project', path: 'AddProject' }
     ];
 

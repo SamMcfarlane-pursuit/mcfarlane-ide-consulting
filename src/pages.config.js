@@ -2,6 +2,7 @@ import Portfolio from './pages/Portfolio';
 import AddProject from './pages/AddProject';
 import EditProject from './pages/EditProject';
 import About from './pages/About';
+import Contact from './pages/Contact';
 import __Layout from './Layout.jsx';
 
 
@@ -10,6 +11,7 @@ export const PAGES = {
     "AddProject": AddProject,
     "EditProject": EditProject,
     "About": About,
+    "Contact": Contact,
 }
 
 export const pagesConfig = {
