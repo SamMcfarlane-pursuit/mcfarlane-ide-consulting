@@ -3,13 +3,14 @@ import { Link, useLocation } from 'react-router-dom';
 import { Home } from 'lucide-react';
 import NavigationTracker from '@/lib/NavigationTracker';
 import { createPageUrl } from '@/utils';
+import Footer from './components/layout/Footer';
 
 export default function Layout({ children }) {
   const location = useLocation();
   const currentPath = location.pathname;
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-slate-950 flex flex-col">
       <NavigationTracker />
 
       {/* Vibrant header with glow effects */}
@@ -62,9 +63,12 @@ export default function Layout({ children }) {
       </header>
 
       {/* Page content with top padding for fixed header */}
-      <main className="pt-16">
+      <main className="pt-16 flex-grow">
         {children}
       </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

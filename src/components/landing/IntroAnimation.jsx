@@ -15,15 +15,39 @@ export default function IntroAnimation({ children, introComplete }) {
 }
 
 // Hero text component with staggered animation - synced with camera
-export function HeroText({ title, subtitle, tagline }) {
+export function HeroText({ title, subtitle, tagline, profileImage, onViewProjects }) {
     return (
         <div className="text-center space-y-8">
+            {/* Profile Photo - appears first with glow effect */}
+            {profileImage && (
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{
+                        delay: 1.2,
+                        duration: 0.8,
+                        ease: [0.25, 0.46, 0.45, 0.94]
+                    }}
+                    className="flex justify-center mb-6"
+                >
+                    <div className="relative">
+                        {/* Glow effect */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400/40 to-yellow-500/30 blur-xl scale-110" />
+                        <img
+                            src={profileImage}
+                            alt={title}
+                            className="relative w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-amber-400/50 shadow-2xl shadow-amber-500/30"
+                        />
+                    </div>
+                </motion.div>
+            )}
+
             {/* Main title - appears after camera starts pulling back */}
             <motion.h1
                 initial={{ opacity: 0, y: 40, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{
-                    delay: 1.5,
+                    delay: profileImage ? 1.8 : 1.5,
                     duration: 1.2,
                     ease: [0.25, 0.46, 0.45, 0.94]
                 }}
@@ -44,7 +68,7 @@ export function HeroText({ title, subtitle, tagline }) {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
-                    delay: 2.3,
+                    delay: profileImage ? 2.6 : 2.3,
                     duration: 1,
                     ease: 'easeOut'
                 }}
@@ -58,12 +82,38 @@ export function HeroText({ title, subtitle, tagline }) {
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 3.2, duration: 0.8 }}
+                    transition={{ delay: profileImage ? 3.4 : 3.2, duration: 0.8 }}
                     className="text-sm text-amber-400/70 tracking-widest uppercase font-medium"
                 >
                     {tagline}
                 </motion.p>
             )}
+
+            {/* CTA Button - View Projects */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: profileImage ? 3.8 : 3.6, duration: 0.6 }}
+                className="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center"
+            >
+                <button
+                    onClick={onViewProjects}
+                    className="group relative px-8 py-4 bg-gradient-to-r from-amber-500/20 to-yellow-500/15 hover:from-amber-500/30 hover:to-yellow-500/25 text-amber-200 border border-amber-400/40 hover:border-amber-400/60 backdrop-blur-sm rounded-xl shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20 transition-all duration-300 font-medium"
+                >
+                    <span className="relative z-10 flex items-center gap-2">
+                        View My Projects
+                        <svg className="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                    </span>
+                </button>
+                <a
+                    href="/About"
+                    className="px-6 py-3 text-gray-400 hover:text-amber-300 transition-colors font-medium border border-transparent hover:border-amber-500/20 rounded-lg"
+                >
+                    About Me
+                </a>
+            </motion.div>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useRef } from 'react';
 import { Project } from '@/entities/Project';
 import { motion } from 'framer-motion';
 import { Loader2, Plus } from 'lucide-react';
@@ -30,6 +30,12 @@ export default function Portfolio() {
   const [introComplete, setIntroComplete] = useState(false);
 
   const navigate = useNavigate();
+  const projectsRef = useRef(null);
+
+  // Scroll to projects section
+  const handleViewProjects = () => {
+    projectsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   useEffect(() => {
     loadProjects();
@@ -135,7 +141,9 @@ export default function Portfolio() {
             <HeroText
               title="Samuel McFarlane"
               subtitle="AI/ML Engineer & Full-Stack Developer building intelligent systems from first principles — from Rust backends to custom LLMs"
-              tagline="Brooklyn-based • Pursuit AI Native Program • Click any project to explore"
+              tagline="Brooklyn-based • Pursuit AI Native Program"
+              profileImage="/assets/profile-photo.jpg"
+              onViewProjects={handleViewProjects}
             />
           </div>
 
@@ -149,10 +157,11 @@ export default function Portfolio() {
 
           {/* Projects Section */}
           <motion.div
+            ref={projectsRef}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.8 }}
-            className="w-full max-w-7xl"
+            className="w-full max-w-7xl scroll-mt-20"
           >
             {/* Controls Bar */}
             <div className="flex items-center justify-between mb-8 px-4">

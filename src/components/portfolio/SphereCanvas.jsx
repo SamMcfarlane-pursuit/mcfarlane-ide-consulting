@@ -22,7 +22,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
   const drawCategoryIcon = (context, category, centerX, centerY, size) => {
     context.save();
     context.translate(centerX, centerY);
-    
+
     // Set style for all icons
     context.strokeStyle = '#FFFFFF';
     context.fillStyle = '#FFFFFF';
@@ -30,22 +30,22 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     context.lineCap = 'round';
     context.lineJoin = 'round';
 
-    switch(category) {
+    switch (category) {
       case 'AI/ML':
         // Neural network icon
         const nodeRadius = size / 15;
         const positions = [
-          [-size/3, -size/3], [0, -size/3], [size/3, -size/3],
-          [-size/2.5, 0], [size/2.5, 0],
-          [-size/3, size/3], [0, size/3], [size/3, size/3]
+          [-size / 3, -size / 3], [0, -size / 3], [size / 3, -size / 3],
+          [-size / 2.5, 0], [size / 2.5, 0],
+          [-size / 3, size / 3], [0, size / 3], [size / 3, size / 3]
         ];
-        
+
         // Draw connections
         context.globalAlpha = 0.6;
         positions.forEach((pos1, i) => {
           positions.forEach((pos2, j) => {
             // Random connections to simulate neural network
-            if (i < j && Math.random() > 0.3) { 
+            if (i < j && Math.random() > 0.3) {
               context.beginPath();
               context.moveTo(pos1[0], pos1[1]);
               context.lineTo(pos2[0], pos2[1]);
@@ -53,7 +53,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
             }
           });
         });
-        
+
         // Draw nodes
         context.globalAlpha = 1;
         positions.forEach(pos => {
@@ -70,29 +70,29 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
         // Browser window with code brackets
         const w = size * 0.8;
         const h = size * 0.7;
-        
+
         // Window outline
         context.beginPath();
-        context.rect(-w/2, -h/2, w, h);
+        context.rect(-w / 2, -h / 2, w, h);
         context.stroke();
-        
+
         // Top bar
-        context.fillRect(-w/2, -h/2, w, h/6);
-        
+        context.fillRect(-w / 2, -h / 2, w, h / 6);
+
         // Dots
         context.fillStyle = '#000000';
-        [-w/3, -w/6, w/100].forEach((x) => { // Adjusted 0 to w/100 to avoid overlap with line
+        [-w / 3, -w / 6, w / 100].forEach((x) => { // Adjusted 0 to w/100 to avoid overlap with line
           context.beginPath();
-          context.arc(x, -h/3, size/25, 0, Math.PI * 2);
+          context.arc(x, -h / 3, size / 25, 0, Math.PI * 2);
           context.fill();
         });
-        
+
         // Code brackets
         context.fillStyle = '#FFFFFF';
-        context.font = `bold ${size/2}px monospace`; // Adjusted font size
+        context.font = `bold ${size / 2}px monospace`; // Adjusted font size
         context.textAlign = 'center';
         context.textBaseline = 'middle';
-        context.fillText('< >', 0, h/8);
+        context.fillText('< >', 0, h / 8);
         break;
 
       case 'Mobile App':
@@ -100,28 +100,28 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
         const phoneW = size * 0.5;
         const phoneH = size * 0.9;
         const radius = size / 10;
-        
+
         // Phone outline
         context.beginPath();
-        context.roundRect(-phoneW/2, -phoneH/2, phoneW, phoneH, radius);
+        context.roundRect(-phoneW / 2, -phoneH / 2, phoneW, phoneH, radius);
         context.stroke();
-        
+
         // Screen
         context.beginPath();
-        context.rect(-phoneW/2.5, -phoneH/3, phoneW/1.25, phoneH/1.8);
+        context.rect(-phoneW / 2.5, -phoneH / 3, phoneW / 1.25, phoneH / 1.8);
         context.stroke();
-        
+
         // Home button
         context.beginPath();
-        context.arc(0, phoneH/3, size/15, 0, Math.PI * 2);
+        context.arc(0, phoneH / 3, size / 15, 0, Math.PI * 2);
         context.stroke();
-        
+
         // Signal bars
         const barWidth = size / 20;
         for (let i = 0; i < 4; i++) {
           context.fillRect(
-            -phoneW/3 + i * (barWidth * 1.5),
-            -phoneH/2.5,
+            -phoneW / 3 + i * (barWidth * 1.5),
+            -phoneH / 2.5,
             barWidth,
             (i + 1) * size / 20
           );
@@ -131,38 +131,38 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       case 'Data Science':
         // Chart/Graph icon
         const chartSize = size * 0.8;
-        
+
         // Axes
         context.beginPath();
-        context.moveTo(-chartSize/2, chartSize/2);
-        context.lineTo(-chartSize/2, -chartSize/2);
-        context.lineTo(chartSize/2, chartSize/2);
+        context.moveTo(-chartSize / 2, chartSize / 2);
+        context.lineTo(-chartSize / 2, -chartSize / 2);
+        context.lineTo(chartSize / 2, chartSize / 2);
         context.stroke();
-        
+
         // Bar chart
         const bars = [0.4, 0.7, 0.5, 0.9]; // Fewer bars for clarity
         const barGap = chartSize / (bars.length + 1) / 2;
         const barW = chartSize / (bars.length * 1.5);
-        
+
         context.fillStyle = '#FFFFFF';
         bars.forEach((height, i) => {
-          const x = -chartSize/2 + barGap + (i * (barW + barGap));
+          const x = -chartSize / 2 + barGap + (i * (barW + barGap));
           const barHeight = height * chartSize * 0.7;
           context.fillRect(
             x,
-            chartSize/2 - barHeight,
+            chartSize / 2 - barHeight,
             barW,
             barHeight
           );
         });
-        
+
         // Trend line
         context.strokeStyle = '#FFD700'; // Accent color for the line
         context.lineWidth = size / 25;
         context.beginPath();
         bars.forEach((height, i) => {
-          const x = -chartSize/2 + barGap + (i * (barW + barGap)) + barW/2;
-          const y = chartSize/2 - height * chartSize * 0.7;
+          const x = -chartSize / 2 + barGap + (i * (barW + barGap)) + barW / 2;
+          const y = chartSize / 2 - height * chartSize * 0.7;
           if (i === 0) context.moveTo(x, y);
           else context.lineTo(x, y);
         });
@@ -174,12 +174,12 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
         // Cloud with gears icon
         // Cloud shape
         context.beginPath();
-        context.arc(-size/4, size/10, size/4, Math.PI, 0); // Left bump
-        context.arc(size/4, size/10, size/4, Math.PI, 0); // Right bump
-        context.arc(0, -size/6 + size/10, size/3, 0, Math.PI); // Top bump
+        context.arc(-size / 4, size / 10, size / 4, Math.PI, 0); // Left bump
+        context.arc(size / 4, size / 10, size / 4, Math.PI, 0); // Right bump
+        context.arc(0, -size / 6 + size / 10, size / 3, 0, Math.PI); // Top bump
         context.closePath();
         context.fill();
-        
+
         // Gear in cloud
         const gearRadius = size / 6;
         const teeth = 8;
@@ -195,7 +195,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
         }
         context.closePath();
         context.fill();
-        
+
         // Center hole
         context.fillStyle = '#FFFFFF';
         context.beginPath();
@@ -206,35 +206,35 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       case 'Blockchain':
         // Chain links icon
         const linkSize = size / 3;
-        
+
         context.strokeStyle = '#FFFFFF';
         context.lineWidth = size / 20;
 
         // First block
         context.beginPath();
-        context.rect(-linkSize * 1.2, -linkSize/2, linkSize, linkSize);
+        context.rect(-linkSize * 1.2, -linkSize / 2, linkSize, linkSize);
         context.stroke();
-        context.fillText('0', -linkSize * 1.2 + linkSize/2, 0);
+        context.fillText('0', -linkSize * 1.2 + linkSize / 2, 0);
 
         // Second block
         context.beginPath();
-        context.rect(linkSize * 0.2, -linkSize/2, linkSize, linkSize);
+        context.rect(linkSize * 0.2, -linkSize / 2, linkSize, linkSize);
         context.stroke();
-        context.fillText('1', linkSize * 0.2 + linkSize/2, 0);
+        context.fillText('1', linkSize * 0.2 + linkSize / 2, 0);
 
         // Arrow connecting them
         context.strokeStyle = '#FFD700'; // Gold accent for connection
         context.lineWidth = size / 30;
         context.beginPath();
-        context.moveTo(-linkSize/2, 0);
-        context.lineTo(linkSize/4, 0);
-        context.lineTo(linkSize/4 - linkSize/10, -linkSize/10);
-        context.moveTo(linkSize/4, 0);
-        context.lineTo(linkSize/4 - linkSize/10, linkSize/10);
+        context.moveTo(-linkSize / 2, 0);
+        context.lineTo(linkSize / 4, 0);
+        context.lineTo(linkSize / 4 - linkSize / 10, -linkSize / 10);
+        context.moveTo(linkSize / 4, 0);
+        context.lineTo(linkSize / 4 - linkSize / 10, linkSize / 10);
         context.stroke();
-        
+
         context.fillStyle = '#FFFFFF';
-        context.font = `bold ${size/4}px Arial`;
+        context.font = `bold ${size / 4}px Arial`;
         context.textAlign = 'center';
         context.textBaseline = 'middle';
         break;
@@ -243,16 +243,16 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
         // Connected devices icon
         const deviceSize = size / 6;
         const devices = [
-          [0, -size/2.5],
-          [-size/2.5, size/4],
-          [size/2.5, size/4]
+          [0, -size / 2.5],
+          [-size / 2.5, size / 4],
+          [size / 2.5, size / 4]
         ];
-        
+
         // Center hub
         context.beginPath();
         context.arc(0, 0, deviceSize, 0, Math.PI * 2);
         context.fill();
-        
+
         // Connections
         context.globalAlpha = 0.6;
         devices.forEach(pos => {
@@ -262,18 +262,18 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
           context.stroke();
         });
         context.globalAlpha = 1;
-        
+
         // Devices
         devices.forEach(pos => {
           context.beginPath();
           context.rect(
-            pos[0] - deviceSize/2,
-            pos[1] - deviceSize/2,
+            pos[0] - deviceSize / 2,
+            pos[1] - deviceSize / 2,
             deviceSize,
             deviceSize
           );
           context.stroke();
-          
+
           // Signal waves
           for (let i = 1; i <= 2; i++) { // Reduced waves for clarity
             context.globalAlpha = 1 - (i * 0.3);
@@ -288,43 +288,43 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       case 'Other':
         // Light bulb icon
         const bulbRadius = size / 3;
-        
+
         // Bulb shape
         context.beginPath();
-        context.moveTo(0, -bulbRadius - size/10);
-        context.arc(0, -size/10, bulbRadius, 0, Math.PI * 2);
-        context.lineTo(0, size/5);
+        context.moveTo(0, -bulbRadius - size / 10);
+        context.arc(0, -size / 10, bulbRadius, 0, Math.PI * 2);
+        context.lineTo(0, size / 5);
         context.stroke();
-        
+
         // Filament
         context.strokeStyle = '#FFD700'; // Yellow accent for filament
         context.lineWidth = size / 20;
         context.beginPath();
-        context.moveTo(-bulbRadius/3, -size/10);
-        context.lineTo(bulbRadius/3, -size/10);
-        context.moveTo(0, -size/10 - bulbRadius/2);
-        context.lineTo(0, -size/10 + bulbRadius/2);
+        context.moveTo(-bulbRadius / 3, -size / 10);
+        context.lineTo(bulbRadius / 3, -size / 10);
+        context.moveTo(0, -size / 10 - bulbRadius / 2);
+        context.lineTo(0, -size / 10 + bulbRadius / 2);
         context.stroke();
-        
+
         // Base
         context.strokeStyle = '#FFFFFF';
         context.fillStyle = '#FFFFFF';
-        context.fillRect(-bulbRadius/3, size/5, bulbRadius * 0.66, size/6);
-        
+        context.fillRect(-bulbRadius / 3, size / 5, bulbRadius * 0.66, size / 6);
+
         // Light rays
         context.lineWidth = size / 25;
         for (let i = 0; i < 4; i++) { // Fewer rays for clarity
-          const angle = (i * Math.PI * 2) / 4 + Math.PI/4; // Start from top-right
+          const angle = (i * Math.PI * 2) / 4 + Math.PI / 4; // Start from top-right
           const startR = bulbRadius * 1.2;
           const endR = bulbRadius * 1.6;
           context.beginPath();
           context.moveTo(
             Math.cos(angle) * startR,
-            Math.sin(angle) * startR - size/10
+            Math.sin(angle) * startR - size / 10
           );
           context.lineTo(
             Math.cos(angle) * endR,
-            Math.sin(angle) * endR - size/10
+            Math.sin(angle) * endR - size / 10
           );
           context.stroke();
         }
@@ -335,16 +335,16 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
         context.beginPath();
         for (let i = 0; i < 10; i++) {
           const angle = (i * Math.PI) / 5;
-          const radius = i % 2 === 0 ? size/2 : size/4;
-          const x = Math.cos(angle - Math.PI/2) * radius;
-          const y = Math.sin(angle - Math.PI/2) * radius;
+          const radius = i % 2 === 0 ? size / 2 : size / 4;
+          const x = Math.cos(angle - Math.PI / 2) * radius;
+          const y = Math.sin(angle - Math.PI / 2) * radius;
           if (i === 0) context.moveTo(x, y);
           else context.lineTo(x, y);
         }
         context.closePath();
         context.fill();
     }
-    
+
     context.restore();
   };
 
@@ -357,23 +357,23 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     context.imageSmoothingEnabled = true;
     context.imageSmoothingQuality = 'high';
 
-    // VIBRANT, ATTRACTIVE STATUS COLORS
+    // AMBER/GOLD THEME STATUS COLORS
     let mainColor, accentColor, lightColor, glowColor;
     if (project.status === 'completed') {
-      mainColor = '#00F5A0';  // Vibrant turquoise
-      accentColor = '#00D9F5'; // Electric cyan
-      lightColor = '#7FFFD4';  // Aquamarine
-      glowColor = '#39FF14';   // Neon green
+      mainColor = '#10B981';  // Emerald green
+      accentColor = '#059669'; // Darker emerald
+      lightColor = '#34D399';  // Light emerald
+      glowColor = '#6EE7B7';   // Pale emerald
     } else if (project.status === 'in_progress') {
-      mainColor = '#FF00FF';   // Vibrant magenta
-      accentColor = '#FF1493'; // Deep pink
-      lightColor = '#FF69B4';  // Hot pink
-      glowColor = '#DA70D6';   // Orchid
+      mainColor = '#F59E0B';   // Amber
+      accentColor = '#D97706'; // Darker amber
+      lightColor = '#FBBF24';  // Yellow amber
+      glowColor = '#FCD34D';   // Pale amber
     } else {
-      mainColor = '#FFD700';   // Gold
-      accentColor = '#FFA500'; // Orange
-      lightColor = '#FFFF00';  // Yellow
-      glowColor = '#FF8C00';   // Dark orange
+      mainColor = '#8B5CF6';   // Violet
+      accentColor = '#7C3AED'; // Purple
+      lightColor = '#A78BFA';  // Light violet
+      glowColor = '#C4B5FD';   // Pale violet
     }
 
     if (project.color) {
@@ -387,7 +387,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     gradient.addColorStop(0.3, lightColor);
     gradient.addColorStop(0.6, mainColor);
     gradient.addColorStop(1, accentColor);
-    
+
     context.fillStyle = gradient;
     context.beginPath();
     context.arc(512, 512, 512, 0, Math.PI * 2);
@@ -399,11 +399,11 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       const x = Math.random() * 1024;
       const y = Math.random() * 1024;
       const radius = Math.random() * 80 + 40;
-      
+
       const spotGradient = context.createRadialGradient(x, y, 0, x, y, radius);
       spotGradient.addColorStop(0, lightColor);
       spotGradient.addColorStop(1, 'transparent');
-      
+
       context.fillStyle = spotGradient;
       context.beginPath();
       context.arc(x, y, radius, 0, Math.PI * 2);
@@ -439,18 +439,18 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     if (projectName.length > 15) {
       projectName = projectName.substring(0, 13) + '..';
     }
-    
+
     context.font = 'bold 50px "Arial Black", Arial, sans-serif';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    
+
     // Glowing text effect
     context.strokeStyle = accentColor;
     context.lineWidth = 8;
     context.shadowColor = glowColor;
     context.shadowBlur = 20;
     context.strokeText(projectName, 512, 880);
-    
+
     context.fillStyle = '#FFFFFF';
     context.shadowBlur = 15;
     context.fillText(projectName, 512, 880);
@@ -462,7 +462,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       'in_progress': '◉',
       'planning': '○'
     };
-    
+
     context.shadowColor = glowColor;
     context.shadowBlur = 15;
     context.fillStyle = mainColor;
@@ -470,7 +470,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     context.arc(512, 960, 30, 0, Math.PI * 2);
     context.fill();
     context.shadowBlur = 0;
-    
+
     context.font = 'bold 40px Arial';
     context.fillStyle = '#FFFFFF';
     context.fillText(statusIcons[project.status] || '✓', 512, 960);
@@ -494,12 +494,12 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     if (!context.roundRect) {
       CanvasRenderingContext2D.prototype.roundRect = function (x, y, width, height, radius) {
         if (typeof radius === 'number') {
-            radius = {tl: radius, tr: radius, br: radius, bl: radius};
+          radius = { tl: radius, tr: radius, br: radius, bl: radius };
         } else {
-            let defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
-            for (let side in defaultRadius) {
-                radius[side] = radius[side] || defaultRadius[side];
-            }
+          let defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
+          for (let side in defaultRadius) {
+            radius[side] = radius[side] || defaultRadius[side];
+          }
         }
         this.beginPath();
         this.moveTo(x + radius.tl, y);
@@ -516,21 +516,21 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       };
     }
 
-    // Status color
+    // Status color - Amber/Gold theme
     let bgColor;
     if (project.status === 'completed') {
-      bgColor = '#00F5A0';
+      bgColor = '#10B981'; // Emerald
     } else if (project.status === 'in_progress') {
-      bgColor = '#FF00FF';
+      bgColor = '#F59E0B'; // Amber
     } else {
-      bgColor = '#FFD700';
+      bgColor = '#8B5CF6'; // Violet
     }
 
     // Background
     const gradient = context.createLinearGradient(0, 0, 0, 150);
     gradient.addColorStop(0, bgColor);
     gradient.addColorStop(1, 'rgba(15, 23, 42, 0.95)');
-    
+
     context.fillStyle = gradient;
     context.roundRect(0, 0, 900, 150, 20);
     context.fill();
@@ -548,12 +548,12 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     context.textBaseline = 'middle';
     context.shadowColor = 'rgba(0, 0, 0, 0.8)';
     context.shadowBlur = 15;
-    
+
     let title = project.title;
     if (title.length > 20) {
       title = title.substring(0, 18) + '..';
     }
-    
+
     context.fillText(title, 450, 75);
 
     const texture = new THREE.CanvasTexture(canvas);
@@ -574,12 +574,12 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       0.1,
       1000
     );
-    const renderer = new THREE.WebGLRenderer({ 
-      antialias: true, 
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
       alpha: true,
       powerPreference: 'high-performance'
     });
-    
+
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     currentMount.appendChild(renderer.domElement);
@@ -601,24 +601,24 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
 
       for (let i = 0; i < starCount; i++) {
         const i3 = i * 3;
-        
+
         // Random positions in a large sphere
         const radius = 40 + Math.random() * 60;
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.acos(2 * Math.random() - 1);
-        
+
         positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
         positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
         positions[i3 + 2] = radius * Math.cos(phi);
 
-        // Random colors (white to cyan/purple tints)
+        // Random colors (white to amber/gold tints)
         const colorChoice = Math.random();
         if (colorChoice < 0.6) {
           colors[i3] = colors[i3 + 1] = colors[i3 + 2] = 1; // White
         } else if (colorChoice < 0.8) {
-          colors[i3] = 0.5; colors[i3 + 1] = 1; colors[i3 + 2] = 1; // Cyan tint
+          colors[i3] = 1; colors[i3 + 1] = 0.85; colors[i3 + 2] = 0.4; // Amber tint
         } else {
-          colors[i3] = 1; colors[i3 + 1] = 0.5; colors[i3 + 2] = 1; // Purple tint
+          colors[i3] = 1; colors[i3 + 1] = 0.7; colors[i3 + 2] = 0.2; // Gold tint
         }
 
         // Random sizes
@@ -652,7 +652,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
         const radius = 100 + Math.random() * 50;
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.acos(2 * Math.random() - 1);
-        
+
         positions2[i3] = radius * Math.sin(phi) * Math.cos(theta);
         positions2[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
         positions2[i3 + 2] = radius * Math.cos(phi);
@@ -696,12 +696,12 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     pointLight.position.set(0, 0, 15);
     scene.add(pointLight);
 
-    // Orbit rings
+    // Orbit rings - Amber/Gold theme
     const sphereGeometry = new THREE.SphereGeometry(9, 64, 64);
     const sphereMaterial = new THREE.MeshBasicMaterial({
-      color: 0x00F5A0, // Vibrant turquoise for the orbit
+      color: 0xF59E0B, // Amber for the orbit
       transparent: true,
-      opacity: 0.15,
+      opacity: 0.2,
       wireframe: true,
       wireframeLinewidth: 2
     });
@@ -777,15 +777,15 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       if (isDraggingRef.current) {
         const deltaX = event.clientX - previousMouseRef.current.x;
         const deltaY = event.clientY - previousMouseRef.current.y;
-        
+
         targetRotationRef.current.y += deltaX * 0.005;
         targetRotationRef.current.x += deltaY * 0.005;
-        
+
         targetRotationRef.current.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotationRef.current.x));
-        
+
         velocityRef.current.x = deltaY * 0.001;
         velocityRef.current.y = deltaX * 0.001;
-        
+
         previousMouseRef.current = {
           x: event.clientX,
           y: event.clientY
@@ -885,7 +885,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
         if (Math.abs(velocityRef.current.x) > 0.0001 || Math.abs(velocityRef.current.y) > 0.0001) {
           targetRotationRef.current.x += velocityRef.current.x;
           targetRotationRef.current.y += velocityRef.current.y;
-          
+
           velocityRef.current.x *= 0.95;
           velocityRef.current.y *= 0.95;
         } else {
@@ -984,8 +984,8 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
   }, [projects, selectedProject, onProjectClick]);
 
   return (
-    <div 
-      ref={mountRef} 
+    <div
+      ref={mountRef}
       className="w-full h-full"
       style={{ touchAction: 'none' }}
     />

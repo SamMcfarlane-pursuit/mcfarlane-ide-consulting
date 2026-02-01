@@ -96,12 +96,14 @@ export default function About() {
                         <p>
                             Samuel grew up in <span className="text-amber-300">Crown Heights, Brooklyn</span>, and spent part of his youth in the South Bronx,
                             developing an early understanding of how diverse communities adapt and thrive. Coming from a bilingual Panamanian household,
-                            he learned to navigate cultural diversity while fostering curiosity and discipline.
+                            he learned to navigate cultural diversity while fostering curiosity and discipline. His early fascination with systems and
+                            problem-solving evolved into a deep interest in how technology could improve real-world experiences.
                         </p>
                         <p>
-                            Before joining <span className="text-amber-300">Pursuit's AI Native Program</span>, Samuel worked as a freelance developer
-                            and technical consultant, delivering end-to-end solutions for small businesses. His focus on automation, AI integration,
-                            and intelligent system design gave him a strong foundation in both backend logic and frontend interaction.
+                            Before transitioning to tech, Samuel worked in <span className="text-amber-300">security, construction, and building operations</span>—including
+                            as a porter and security officer at a private residential building in Midtown Manhattan. These roles developed his problem-solving skills,
+                            attention to detail, and ability to perform under pressure. In <span className="text-amber-300">2024</span>, he joined
+                            <span className="text-amber-300"> Pursuit's AI Native Program</span> and began his career as a freelance developer.
                         </p>
                     </div>
                 </motion.div>
