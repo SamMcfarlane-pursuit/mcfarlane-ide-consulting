@@ -49,8 +49,12 @@ export default function About() {
                     transition={{ delay: 0.1 }}
                     className="text-center mb-12"
                 >
-                    <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-amber-400 via-yellow-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/30">
-                        <span className="text-slate-900 font-bold text-3xl">SM</span>
+                    <div className="w-32 h-32 mx-auto mb-6 rounded-full p-1 bg-gradient-to-br from-amber-400 via-yellow-400 to-orange-500 shadow-lg shadow-amber-500/40">
+                        <img
+                            src="/assets/profile-photo.jpg"
+                            alt="Samuel McFarlane"
+                            className="w-full h-full rounded-full object-cover"
+                        />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">Samuel McFarlane</h1>
                     <p className="text-xl text-amber-400 font-medium mb-4">AI/ML Engineer & Full-Stack Developer</p>
