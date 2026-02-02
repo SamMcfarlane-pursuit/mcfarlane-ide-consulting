@@ -259,12 +259,12 @@ export default function Portfolio() {
               <span className="text-emerald-300/80 font-medium">Completed</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-lg shadow-cyan-400/50" />
-              <span className="text-cyan-300/80 font-medium">In Progress</span>
+              <div className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-lg shadow-amber-400/50" />
+              <span className="text-amber-300/80 font-medium">In Progress</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-purple-400 shadow-lg shadow-purple-400/50" />
-              <span className="text-purple-300/80 font-medium">Planning</span>
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-400 shadow-lg shadow-slate-400/50" />
+              <span className="text-slate-300/80 font-medium">Planning</span>
             </div>
           </motion.div>
         </div>
