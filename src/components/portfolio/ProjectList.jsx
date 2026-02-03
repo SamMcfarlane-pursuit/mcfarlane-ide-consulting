@@ -27,8 +27,8 @@ export default function ProjectList({ projects, onProjectClick, onEdit, onDelete
 
   const statusColors = {
     completed: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-    in_progress: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30',
-    planning: 'bg-purple-500/10 text-purple-400 border-purple-500/30'
+    in_progress: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+    planning: 'bg-slate-500/10 text-slate-400 border-slate-500/30'
   };
 
   const statusLabels = {

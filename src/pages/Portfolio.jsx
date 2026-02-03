@@ -7,6 +7,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 
+// Project data seeding
+import { seedProjects } from '@/data/seedProjects';
+
 // Landing components
 import GlobeScene from '../components/landing/GlobeScene';
 import IntroAnimation, { HeroText, ScrollIndicator, CinematicOverlay } from '../components/landing/IntroAnimation';
@@ -80,6 +83,9 @@ export default function Portfolio() {
   const loadProjects = async () => {
     setLoading(true);
     try {
+      // Auto-seed projects on first visit
+      await seedProjects();
+
       const data = await Project.list('-year', 1000);
       setProjects(data);
       setFilteredProjects(data);
@@ -123,55 +129,100 @@ export default function Portfolio() {
   return (
     <IntroAnimation introComplete={introComplete}>
       <CinematicOverlay />
-      <div className="relative min-h-screen bg-black overflow-hidden">
+      <div className="relative h-screen bg-black overflow-hidden">
 
-        {/* Three.js Globe Background */}
-        <Suspense fallback={null}>
-          <GlobeScene onIntroComplete={() => setIntroComplete(true)} />
-        </Suspense>
+        {/* ===================== UNIFIED FULL-SCREEN EXPERIENCE ===================== */}
 
-        {/* Stats Panel */}
-        <StatsPanel projectCount={projects.length} techCount={15} yearsExp={1} />
-
-        {/* Main Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-
-          {/* Hero Section */}
-          <div className="pt-20 pb-12">
-            <HeroText
-              title="Samuel McFarlane"
-              subtitle="AI/ML Engineer & Full-Stack Developer building intelligent systems from first principles — from Rust backends to custom LLMs"
-              tagline="Brooklyn-based • Pursuit AI Native Program"
-              profileImage="/assets/profile-photo.jpg"
-              onViewProjects={handleViewProjects}
-            />
-          </div>
-
-          {/* Tech Stack Filter */}
-          <div className="w-full max-w-5xl mb-12">
-            <TechStackFilter
-              selectedCategory={selectedTechCategory}
-              onCategoryChange={setSelectedTechCategory}
-            />
-          </div>
-
-          {/* Projects Section */}
+        {/* Base Globe Scene - Plays the cinematic entry animation */}
+        <div className="absolute inset-0 z-0">
           <motion.div
-            ref={projectsRef}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.5, duration: 0.8 }}
-            className="w-full max-w-7xl scroll-mt-20"
+            initial={{ opacity: 1 }}
+            animate={{
+              opacity: introComplete ? 0 : 1,
+              scale: introComplete ? 1.05 : 1
+            }}
+            transition={{ duration: 1.5, ease: 'easeInOut' }}
+            className="absolute inset-0"
+            style={{ pointerEvents: introComplete ? 'none' : 'auto' }}
           >
-            {/* Controls Bar */}
-            <div className="flex items-center justify-between mb-8 px-4">
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-amber-400/60 font-medium">
-                  {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}
-                </span>
+            <Suspense fallback={null}>
+              <GlobeScene onIntroComplete={() => setIntroComplete(true)} />
+            </Suspense>
+          </motion.div>
+        </div>
 
+        {/* Hero Section - Visible during and after intro, fades when scrolling to projects */}
+        <motion.div
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: introComplete ? 0 : 1 }}
+          transition={{ duration: 1.2, delay: introComplete ? 0 : 0 }}
+        >
+          <HeroText
+            title="Samuel McFarlane"
+            subtitle="AI/ML Engineer & Full-Stack Developer building intelligent systems from first principles — from Rust backends to custom LLMs"
+            tagline="Brooklyn-based • Pursuit AI Native Program"
+            profileImage="/assets/profile-photo.jpg"
+            onViewProjects={handleViewProjects}
+          />
+        </motion.div>
+
+        {/* ===================== PROJECT UNIVERSE - EMERGES AFTER INTRO ===================== */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: introComplete ? 1 : 0 }}
+          transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 z-20"
+          style={{ pointerEvents: introComplete ? 'auto' : 'none' }}
+        >
+          {/* Full-Screen Project Globe with Integrated Info */}
+          <div className="w-full h-full" style={{
+            background: 'radial-gradient(ellipse at 50% 40%, rgba(16,13,8,0.95) 0%, rgba(8,6,4,0.98) 50%, #000 100%)'
+          }}>
+            <SphereCanvas
+              projects={filteredProjects}
+              onProjectClick={setSelectedProject}
+              selectedProject={selectedProject}
+              filterCategory={selectedTechCategory}
+              fullScreen={true}
+            />
+          </div>
+
+          {/* Top Bar - Stats & Controls Overlay */}
+          <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
+            <div className="flex items-center justify-between px-6 py-4">
+              {/* Stats Panel Inline */}
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="flex items-center gap-6"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold text-white">{projects.length}</span>
+                  <span className="text-xs text-amber-400/70 uppercase tracking-wider">Projects</span>
+                </div>
+                <div className="w-px h-6 bg-amber-500/20" />
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold text-white">15</span>
+                  <span className="text-xs text-amber-400/70 uppercase tracking-wider">Technologies</span>
+                </div>
+                <div className="w-px h-6 bg-amber-500/20" />
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold text-white">1</span>
+                  <span className="text-xs text-amber-400/70 uppercase tracking-wider">Years Exp</span>
+                </div>
+              </motion.div>
+
+              {/* Controls */}
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="flex items-center gap-4"
+              >
                 {/* View Mode Toggle */}
-                <div className="flex gap-1 bg-slate-800/50 backdrop-blur-sm rounded-lg p-1 border border-amber-500/20">
+                <div className="flex gap-1 bg-black/50 backdrop-blur-xl rounded-lg p-1 border border-amber-500/20">
                   {['sphere', 'grid'].map((mode) => (
                     <button
                       key={mode}
@@ -185,92 +236,85 @@ export default function Portfolio() {
                     </button>
                   ))}
                 </div>
-              </div>
 
-              <Link to={createPageUrl('AddProject')}>
-                <Button className="bg-gradient-to-r from-amber-500/20 to-yellow-500/15 hover:from-amber-500/30 hover:to-yellow-500/25 text-amber-200 border border-amber-400/40 hover:border-amber-400/60 backdrop-blur-sm shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20 transition-all duration-300">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Project
-                </Button>
-              </Link>
+                <Link to={createPageUrl('AddProject')}>
+                  <Button className="h-8 px-3 text-xs bg-gradient-to-r from-amber-500/20 to-yellow-500/15 hover:from-amber-500/30 hover:to-yellow-500/25 text-amber-200 border border-amber-400/40 hover:border-amber-400/60 backdrop-blur-xl shadow-lg shadow-amber-500/10">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Project
+                  </Button>
+                </Link>
+              </motion.div>
             </div>
 
-            {/* Projects Display */}
-            {filteredProjects.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-16"
-              >
-                <div className="bg-slate-900/50 backdrop-blur-xl rounded-2xl p-12 border border-amber-500/20 shadow-lg shadow-amber-500/5 max-w-md mx-auto">
-                  <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-amber-500/20 to-yellow-500/10 flex items-center justify-center border border-amber-500/30">
-                    <Plus className="w-8 h-8 text-amber-400" />
-                  </div>
-                  <p className="text-gray-400 mb-6 text-lg">
-                    {selectedTechCategory
-                      ? 'No projects match this category yet.'
-                      : 'Your portfolio awaits its first masterpiece.'}
-                  </p>
-                  <Link to={createPageUrl('AddProject')}>
-                    <Button className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-900 font-semibold shadow-lg shadow-amber-500/25 px-8 py-3">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Your First Project
-                    </Button>
-                  </Link>
-                </div>
-              </motion.div>
-            ) : viewMode === 'sphere' ? (
-              <div
-                className="w-full rounded-2xl overflow-hidden border border-white/10"
-                style={{
-                  height: 'calc(100vh - 500px)',
-                  minHeight: '400px',
-                  maxHeight: '600px',
-                  background: 'rgba(0,0,0,0.3)',
-                  backdropFilter: 'blur(10px)'
-                }}
-              >
-                <SphereCanvas
-                  projects={filteredProjects}
-                  onProjectClick={setSelectedProject}
-                  selectedProject={selectedProject}
-                  filterCategory={selectedTechCategory}
-                />
-              </div>
-            ) : (
-              <ProjectList
-                projects={filteredProjects}
-                onProjectClick={setSelectedProject}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
+            {/* Tech Stack Filter - Compact */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="px-6 pb-4"
+            >
+              <TechStackFilter
+                selectedCategory={selectedTechCategory}
+                onCategoryChange={setSelectedTechCategory}
               />
-            )}
-          </motion.div>
+            </motion.div>
+          </div>
 
-          {/* Status Legend */}
+          {/* Status Legend - Bottom Left */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2 }}
-            className="py-12 flex items-center gap-8 text-xs"
+            transition={{ delay: 1.2, duration: 0.8 }}
+            className="absolute bottom-6 left-6 z-30 flex items-center gap-6 text-xs bg-black/40 backdrop-blur-xl rounded-full px-5 py-2.5 border border-amber-500/15"
           >
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50" />
-              <span className="text-emerald-300/80 font-medium">Completed</span>
+              <div className="w-2 h-2 rounded-full bg-yellow-400 shadow-lg shadow-yellow-400/50" />
+              <span className="text-yellow-300/80 font-medium">Completed</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-lg shadow-amber-400/50" />
+              <div className="w-2 h-2 rounded-full bg-amber-400 shadow-lg shadow-amber-400/50" />
               <span className="text-amber-300/80 font-medium">In Progress</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-slate-400 shadow-lg shadow-slate-400/50" />
-              <span className="text-slate-300/80 font-medium">Planning</span>
+              <div className="w-2 h-2 rounded-full bg-amber-600 shadow-lg shadow-amber-600/50" />
+              <span className="text-amber-500/80 font-medium">Planning</span>
             </div>
           </motion.div>
-        </div>
 
-        {/* Scroll Indicator */}
-        {projects.length === 0 && <ScrollIndicator />}
+          {/* Source Code Link - Bottom Right */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4, duration: 0.8 }}
+            className="absolute bottom-6 right-6 z-30"
+          >
+            <a
+              href="https://github.com/SamMcfarlane"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-xs text-gray-500 hover:text-amber-400 transition-colors"
+            >
+              <span>◇ Source</span>
+            </a>
+          </motion.div>
+        </motion.div>
+
+        {/* Grid View Overlay - When grid mode is selected */}
+        {viewMode === 'grid' && introComplete && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-25 bg-black/95 overflow-auto pt-32 pb-8 px-8"
+          >
+            <ProjectList
+              projects={filteredProjects}
+              onProjectClick={setSelectedProject}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </motion.div>
+        )}
       </div>
 
       {/* Project Detail Modal */}
