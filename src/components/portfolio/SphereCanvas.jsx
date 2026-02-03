@@ -334,79 +334,190 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     scene.add(floatingParticles);
     floatingParticlesRef.current = floatingParticles;
 
-    // ===== ORBITING MINI-PLANETS (Unified Gold/Amber Palette) =====
+    // ===== PREMIUM ORBITING PROJECT PLANETS =====
     const orbitingPlanets = [];
-    // Cohesive gold-amber color spectrum for all planets
-    const orbitConfigs = [
-      { radius: 2.8, speed: 0.4, size: 0.20, tiltX: Math.PI / 10, tiltZ: 0, color: '#ffd700', glowColor: '#ffec8b' },           // Bright Gold
-      { radius: 3.3, speed: -0.3, size: 0.16, tiltX: Math.PI / 5, tiltZ: Math.PI / 8, color: '#ffb700', glowColor: '#ffc933' },  // Amber
-      { radius: 3.7, speed: 0.22, size: 0.12, tiltX: -Math.PI / 6, tiltZ: -Math.PI / 10, color: '#f0c040', glowColor: '#fff2b3' }, // Light Gold
-      { radius: 3.0, speed: -0.38, size: 0.10, tiltX: Math.PI / 4, tiltZ: Math.PI / 5, color: '#daa520', glowColor: '#ffd54f' },  // Goldenrod
-      { radius: 4.0, speed: 0.18, size: 0.08, tiltX: -Math.PI / 8, tiltZ: Math.PI / 6, color: '#cc9200', glowColor: '#ffdd44' },  // Deep Amber
-    ];
+    const textureLoader = new THREE.TextureLoader();
 
-    orbitConfigs.forEach((config, i) => {
+    // Create an orbiting planet for each project (max 8 for performance)
+    const projectsToShow = projects.slice(0, 8);
+
+    projectsToShow.forEach((project, i) => {
+      // Calculate orbit parameters based on index
+      const baseRadius = 2.6 + (i * 0.28); // Spread out orbits  
+      const speed = 0.12 + (i % 3) * 0.06; // Varying speeds
+      const direction = i % 2 === 0 ? 1 : -1; // Alternate directions
+      const size = 0.32 - (i * 0.012); // Larger planets for visibility
+      const tiltX = (Math.PI / 7) * (i % 4 - 1.5);
+      const tiltZ = (Math.PI / 9) * ((i % 3) - 1);
+
+      // Get status color palette
+      const statusPalette = project.status === 'completed' ? COLORS.completed :
+        project.status === 'in_progress' ? COLORS.in_progress :
+          COLORS.planning;
+
       // Create orbiting planet group
       const orbitGroup = new THREE.Group();
-      orbitGroup.rotation.x = config.tiltX;
-      orbitGroup.rotation.z = config.tiltZ;
+      orbitGroup.rotation.x = tiltX;
+      orbitGroup.rotation.z = tiltZ;
 
-      // Mini planet core - high detail for 4K
-      const planetCore = new THREE.Mesh(
-        new THREE.SphereGeometry(config.size, 32, 32), // Higher segments for smooth spheres
-        new THREE.MeshBasicMaterial({
-          color: config.color,
+      // Planet container (for local rotation)
+      const planetContainer = new THREE.Group();
+      planetContainer.position.x = baseRadius;
+
+      // ===== LAYER 1: Metallic Core (innermost) =====
+      const coreGeometry = new THREE.SphereGeometry(size * 0.6, 48, 48);
+      const coreMaterial = new THREE.MeshBasicMaterial({
+        color: statusPalette.dark,
+        transparent: true,
+        opacity: 1.0
+      });
+      const core = new THREE.Mesh(coreGeometry, coreMaterial);
+
+      // ===== LAYER 2: Main Planet Surface =====
+      const planetGeometry = new THREE.SphereGeometry(size, 64, 64);
+      const planetMaterial = new THREE.MeshBasicMaterial({
+        color: statusPalette.main,
+        transparent: true,
+        opacity: 0.9
+      });
+      const planetSurface = new THREE.Mesh(planetGeometry, planetMaterial);
+
+      // Try to load thumbnail texture
+      if (project.image) {
+        textureLoader.load(
+          project.image,
+          (texture) => {
+            texture.colorSpace = THREE.SRGBColorSpace;
+            texture.wrapS = THREE.ClampToEdgeWrapping;
+            texture.wrapT = THREE.ClampToEdgeWrapping;
+            texture.minFilter = THREE.LinearMipmapLinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+            planetSurface.material = new THREE.MeshBasicMaterial({
+              map: texture,
+              transparent: false,
+              side: THREE.FrontSide
+            });
+            planetSurface.material.needsUpdate = true;
+          },
+          undefined,
+          () => console.log(`Texture fallback for ${project.title}`)
+        );
+      }
+
+      // ===== LAYER 3: Inner Light Glow =====
+      const innerGlowGeometry = new THREE.SphereGeometry(size * 1.15, 32, 32);
+      const innerGlowMaterial = new THREE.MeshBasicMaterial({
+        color: statusPalette.light,
+        transparent: true,
+        opacity: 0.35
+      });
+      const innerGlow = new THREE.Mesh(innerGlowGeometry, innerGlowMaterial);
+
+      // ===== LAYER 4: Chromatic Ring (Saturn-style) =====
+      const ringGeometry = new THREE.TorusGeometry(size * 1.4, 0.025, 8, 64);
+      const ringMaterial = new THREE.MeshBasicMaterial({
+        color: statusPalette.accent,
+        transparent: true,
+        opacity: 0.85
+      });
+      const chromaticRing = new THREE.Mesh(ringGeometry, ringMaterial);
+      chromaticRing.rotation.x = Math.PI / 2;
+
+      // ===== LAYER 5: Secondary Ring (offset angle) =====
+      const ring2Geometry = new THREE.TorusGeometry(size * 1.6, 0.015, 8, 48);
+      const ring2Material = new THREE.MeshBasicMaterial({
+        color: statusPalette.glow,
+        transparent: true,
+        opacity: 0.5
+      });
+      const secondaryRing = new THREE.Mesh(ring2Geometry, ring2Material);
+      secondaryRing.rotation.x = Math.PI / 2.5;
+      secondaryRing.rotation.y = Math.PI / 6;
+
+      // ===== LAYER 6: Energy Aura =====
+      const auraGeometry = new THREE.SphereGeometry(size * 1.9, 24, 24);
+      const auraMaterial = new THREE.MeshBasicMaterial({
+        color: statusPalette.glow,
+        transparent: true,
+        opacity: 0.18
+      });
+      const energyAura = new THREE.Mesh(auraGeometry, auraMaterial);
+
+      // ===== LAYER 7: Outer Halo (atmosphere) =====
+      const haloGeometry = new THREE.SphereGeometry(size * 2.5, 16, 16);
+      const haloMaterial = new THREE.MeshBasicMaterial({
+        color: statusPalette.light,
+        transparent: true,
+        opacity: 0.08
+      });
+      const outerHalo = new THREE.Mesh(haloGeometry, haloMaterial);
+
+      // ===== LAYER 8: Orbiting Particle Dots =====
+      const particleDots = new THREE.Group();
+      for (let p = 0; p < 6; p++) {
+        const dotGeometry = new THREE.SphereGeometry(size * 0.08, 8, 8);
+        const dotMaterial = new THREE.MeshBasicMaterial({
+          color: statusPalette.accent,
           transparent: true,
-          opacity: 1.0 // Full opacity for crisp planets
-        })
-      );
-      planetCore.position.x = config.radius;
+          opacity: 0.7
+        });
+        const dot = new THREE.Mesh(dotGeometry, dotMaterial);
+        const dotAngle = (p / 6) * Math.PI * 2;
+        const dotRadius = size * 1.8;
+        dot.position.set(
+          Math.cos(dotAngle) * dotRadius,
+          (Math.random() - 0.5) * size * 0.5,
+          Math.sin(dotAngle) * dotRadius
+        );
+        particleDots.add(dot);
+      }
 
-      // Inner glow - uses dedicated glow color
-      const innerGlowMini = new THREE.Mesh(
-        new THREE.SphereGeometry(config.size * 1.6, 24, 24),
-        new THREE.MeshBasicMaterial({
-          color: config.glowColor || config.color,
-          transparent: true,
-          opacity: 0.5
-        })
-      );
-      innerGlowMini.position.x = config.radius;
+      // Add all layers to container
+      planetContainer.add(core);
+      planetContainer.add(planetSurface);
+      planetContainer.add(innerGlow);
+      planetContainer.add(chromaticRing);
+      planetContainer.add(secondaryRing);
+      planetContainer.add(energyAura);
+      planetContainer.add(outerHalo);
+      planetContainer.add(particleDots);
+      orbitGroup.add(planetContainer);
 
-      // Outer halo - soft glow effect
-      const outerGlowMini = new THREE.Mesh(
-        new THREE.SphereGeometry(config.size * 2.8, 16, 16),
-        new THREE.MeshBasicMaterial({
-          color: config.glowColor || config.color,
-          transparent: true,
-          opacity: 0.2
-        })
-      );
-      outerGlowMini.position.x = config.radius;
-
-      // Orbit path ring (subtle)
+      // ===== ORBIT PATH (glowing trail) =====
       const orbitPath = new THREE.Mesh(
-        new THREE.TorusGeometry(config.radius, 0.003, 8, 128),
+        new THREE.TorusGeometry(baseRadius, 0.006, 8, 128),
         new THREE.MeshBasicMaterial({
-          color: COLORS.orbit,
+          color: statusPalette.light,
           transparent: true,
           opacity: 0.12
         })
       );
       orbitPath.rotation.x = Math.PI / 2;
 
-      orbitGroup.add(planetCore, innerGlowMini, outerGlowMini);
       scene.add(orbitGroup);
       scene.add(orbitPath);
 
-      // Store rotation offset so planets aren't all starting at same position
+      // Store for animation with all animatable parts
       orbitingPlanets.push({
         group: orbitGroup,
+        planetContainer,
+        planetSurface,
+        core,
+        innerGlow,
+        chromaticRing,
+        secondaryRing,
+        energyAura,
+        outerHalo,
+        particleDots,
         path: orbitPath,
-        speed: config.speed,
-        offset: (i / orbitConfigs.length) * Math.PI * 2
+        speed: speed * direction,
+        offset: (i / projectsToShow.length) * Math.PI * 2,
+        projectIndex: i
       });
     });
+
 
     // Store orbiting planets reference for animation
     const orbitingPlanetsRef = { current: orbitingPlanets };
@@ -460,13 +571,65 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
         stars.rotation.y += 0.0002;
       });
 
-      // ORBITING MINI-PLANETS ANIMATION
+      // PREMIUM ORBITING PLANETS ANIMATION
       if (orbitingPlanetsRef.current) {
-        orbitingPlanetsRef.current.forEach((planet) => {
+        orbitingPlanetsRef.current.forEach((planet, idx) => {
+          // Orbital rotation around main globe
           planet.group.rotation.y = time * planet.speed + planet.offset;
-          // Subtle path glow pulse
+
+          // Self-rotation of planet surface
+          if (planet.planetSurface) {
+            planet.planetSurface.rotation.y += 0.006;
+          }
+
+          // Core gentle pulse
+          if (planet.core) {
+            const corePulse = 1 + Math.sin(time * 3 + planet.offset) * 0.05;
+            planet.core.scale.setScalar(corePulse);
+          }
+
+          // Inner glow breathing
+          if (planet.innerGlow) {
+            const glowPulse = 0.3 + Math.sin(time * 2 + planet.offset) * 0.1;
+            planet.innerGlow.material.opacity = glowPulse;
+          }
+
+          // Chromatic ring rotation
+          if (planet.chromaticRing) {
+            planet.chromaticRing.rotation.z = time * 0.3;
+            const ringPulse = 0.75 + Math.sin(time * 2.5 + planet.offset) * 0.15;
+            planet.chromaticRing.material.opacity = ringPulse;
+          }
+
+          // Secondary ring counter-rotation
+          if (planet.secondaryRing) {
+            planet.secondaryRing.rotation.z = -time * 0.2;
+            planet.secondaryRing.rotation.x = Math.PI / 2.5 + Math.sin(time * 0.5) * 0.1;
+          }
+
+          // Energy aura pulse
+          if (planet.energyAura) {
+            const auraPulse = 1 + Math.sin(time * 1.5 + planet.offset * 2) * 0.08;
+            planet.energyAura.scale.setScalar(auraPulse);
+            planet.energyAura.material.opacity = 0.12 + Math.sin(time * 2 + planet.offset) * 0.08;
+          }
+
+          // Outer halo shimmer
+          if (planet.outerHalo) {
+            const haloPulse = 1 + Math.sin(time * 0.8 + planet.offset) * 0.05;
+            planet.outerHalo.scale.setScalar(haloPulse);
+            planet.outerHalo.material.opacity = 0.05 + Math.sin(time * 1.5 + idx) * 0.04;
+          }
+
+          // Particle dots orbit around planet
+          if (planet.particleDots) {
+            planet.particleDots.rotation.y = time * 0.8;
+            planet.particleDots.rotation.x = Math.sin(time * 0.3) * 0.2;
+          }
+
+          // Orbit path glow pulse
           if (planet.path) {
-            planet.path.material.opacity = 0.08 + Math.sin(time * 2 + planet.offset) * 0.04;
+            planet.path.material.opacity = 0.08 + Math.sin(time * 2 + planet.offset) * 0.06;
           }
         });
       }
