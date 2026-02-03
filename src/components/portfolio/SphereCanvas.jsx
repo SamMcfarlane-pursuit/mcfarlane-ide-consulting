@@ -346,7 +346,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       const baseRadius = 2.6 + (i * 0.28); // Spread out orbits  
       const speed = 0.12 + (i % 3) * 0.06; // Varying speeds
       const direction = i % 2 === 0 ? 1 : -1; // Alternate directions
-      const size = 0.18 - (i * 0.008); // Smaller proportional planets
+      const size = 0.22 - (i * 0.008); // Balanced proportional planets
       const tiltX = (Math.PI / 7) * (i % 4 - 1.5);
       const tiltZ = (Math.PI / 9) * ((i % 3) - 1);
 

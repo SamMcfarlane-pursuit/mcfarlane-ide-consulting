@@ -53,24 +53,26 @@ export default function Portfolio() {
   useEffect(() => {
     let filtered = projects;
 
-    // Filter by tech category (map to technology array)
+    // Filter by category (uses project.category field AND technology keywords)
     if (selectedTechCategory) {
-      const categoryMapping = {
-        web: ['React', 'Next.js', 'Vue', 'JavaScript', 'TypeScript', 'Node.js'],
-        scroll: ['GSAP', 'Framer Motion', 'Lenis', 'Locomotive'],
-        dataviz: ['D3.js', 'Chart.js', 'Recharts', 'Plotly'],
-        audio: ['Web Audio API', 'Tone.js', 'Howler.js'],
-        gesture: ['Touch', 'Drag', 'Swipe', 'Mouse'],
-        ixd: ['UX', 'Interaction', 'Animation', 'Prototype'],
-        ui: ['UI', 'Figma', 'Design System', 'CSS'],
-        webgl: ['Three.js', 'WebGL', 'GLSL', 'Shaders', 'R3F'],
+      const techKeywords = {
+        web: ['React', 'Next.js', 'Vue', 'JavaScript', 'TypeScript', 'Node.js', 'Vite', 'TailwindCSS'],
+        dataviz: ['D3.js', 'Chart.js', 'Recharts', 'Data Visualization', 'Data Analytics'],
+        ai: ['AI', 'ML', 'Machine Learning', 'Llama', 'Ollama', 'AI/ML', 'NLP', 'Python'],
+        ui: ['UI', 'Figma', 'Design System', 'CSS', 'Design'],
+        webgl: ['Three.js', 'WebGL', 'GLSL', 'Shaders', 'R3F', 'Framer Motion'],
       };
-      const keywords = categoryMapping[selectedTechCategory] || [];
-      filtered = filtered.filter(p =>
-        p.technologies?.some(tech =>
+      const keywords = techKeywords[selectedTechCategory] || [];
+
+      filtered = filtered.filter(p => {
+        // Match by category field directly
+        const categoryMatch = p.category === selectedTechCategory;
+        // Also match by technology keywords
+        const techMatch = p.technologies?.some(tech =>
           keywords.some(kw => tech.toLowerCase().includes(kw.toLowerCase()))
-        )
-      );
+        );
+        return categoryMatch || techMatch;
+      });
     }
 
     if (selectedStatus !== 'all') {
@@ -305,7 +307,7 @@ export default function Portfolio() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-25 bg-black/95 overflow-auto pt-32 pb-8 px-8"
+            className="absolute inset-0 z-40 bg-black/95 overflow-auto pt-32 pb-8 px-8"
           >
             <ProjectList
               projects={filteredProjects}
