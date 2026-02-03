@@ -21,6 +21,17 @@ import SphereCanvas from '../components/portfolio/SphereCanvas';
 import ProjectDetail from '../components/portfolio/ProjectDetail';
 import ProjectList from '../components/portfolio/ProjectList';
 
+// Admin detection - only show admin controls on localhost or with admin query param
+const isAdminMode = () => {
+  if (typeof window === 'undefined') return false;
+  const hostname = window.location.hostname;
+  const searchParams = new URLSearchParams(window.location.search);
+  // Admin on localhost OR with secret admin param
+  return hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    searchParams.get('admin') === 'true';
+};
+
 export default function Portfolio() {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
@@ -31,9 +42,15 @@ export default function Portfolio() {
   const [deleting, setDeleting] = useState(false);
   const [viewMode, setViewMode] = useState('sphere');
   const [introComplete, setIntroComplete] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const navigate = useNavigate();
   const projectsRef = useRef(null);
+
+  // Check admin status on mount
+  useEffect(() => {
+    setIsAdmin(isAdminMode());
+  }, []);
 
   // Scroll to projects section
   const handleViewProjects = () => {
@@ -239,12 +256,14 @@ export default function Portfolio() {
                   ))}
                 </div>
 
-                <Link to={createPageUrl('AddProject')}>
-                  <Button className="h-8 px-3 text-xs bg-gradient-to-r from-amber-500/20 to-yellow-500/15 hover:from-amber-500/30 hover:to-yellow-500/25 text-amber-200 border border-amber-400/40 hover:border-amber-400/60 backdrop-blur-xl shadow-lg shadow-amber-500/10">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Project
-                  </Button>
-                </Link>
+                {isAdmin && (
+                  <Link to={createPageUrl('AddProject')}>
+                    <button className="h-8 px-3 text-xs bg-gradient-to-r from-amber-500/20 to-yellow-500/15 hover:from-amber-500/30 hover:to-yellow-500/25 text-amber-200 border border-amber-400/40 hover:border-amber-400/60 backdrop-blur-xl shadow-lg shadow-amber-500/10 rounded-md font-medium transition-all duration-300 flex items-center gap-2">
+                      <Plus className="w-4 h-4" />
+                      Add Project
+                    </button>
+                  </Link>
+                )}
               </motion.div>
             </div>
 

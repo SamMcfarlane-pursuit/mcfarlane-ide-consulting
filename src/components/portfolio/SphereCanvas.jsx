@@ -151,7 +151,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 4)); // Support up to 4K displays
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.3; // Slightly brighter for gold pop
+    renderer.toneMappingExposure = 1.8; // Enhanced brightness for premium visual impact
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.shadowMap.enabled = false; // Disable shadows for performance
     currentMount.appendChild(renderer.domElement);
@@ -342,12 +342,12 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     const projectsToShow = projects.slice(0, 8);
 
     projectsToShow.forEach((project, i) => {
-      // Calculate orbit parameters based on index
-      const baseRadius = 2.6 + (i * 0.28); // Spread out orbits  
-      const speed = 0.12 + (i % 3) * 0.06; // Varying speeds
+      // Calculate orbit parameters - artistic flowing motion
+      const baseRadius = 2.5 + (i * 0.32); // Wider spread for visual clarity
+      const speed = 0.06 + (i % 4) * 0.025; // Slower, more majestic speeds
       const direction = i % 2 === 0 ? 1 : -1; // Alternate directions
       const size = 0.22 - (i * 0.008); // Balanced proportional planets
-      const tiltX = (Math.PI / 7) * (i % 4 - 1.5);
+      const tiltX = (Math.PI / 5) * Math.sin(i * 0.8); // Flowing sinusoidal tilts
       const tiltZ = (Math.PI / 9) * ((i % 3) - 1);
 
       // Get status color palette
@@ -571,15 +571,22 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
         stars.rotation.y += 0.0002;
       });
 
-      // PREMIUM ORBITING PLANETS ANIMATION
+      // PREMIUM ORBITING PLANETS ANIMATION - Artistic Flowing Motion
       if (orbitingPlanetsRef.current) {
         orbitingPlanetsRef.current.forEach((planet, idx) => {
-          // Orbital rotation around main globe
-          planet.group.rotation.y = time * planet.speed + planet.offset;
+          // Smooth, flowing orbital rotation with sinusoidal variation
+          const baseRotation = time * planet.speed + planet.offset;
+          const flowVariation = Math.sin(time * 0.3 + idx * 0.7) * 0.15;
+          planet.group.rotation.y = baseRotation + flowVariation;
 
-          // Self-rotation of planet surface
+          // Gentle orbital plane wobble for organic feel
+          planet.group.rotation.x += Math.sin(time * 0.2 + idx) * 0.0003;
+          planet.group.rotation.z += Math.cos(time * 0.15 + idx * 0.5) * 0.0002;
+
+          // Self-rotation with flowing speed variation
           if (planet.planetSurface) {
-            planet.planetSurface.rotation.y += 0.006;
+            const rotationSpeed = 0.005 + Math.sin(time * 0.5 + idx) * 0.002;
+            planet.planetSurface.rotation.y += rotationSpeed;
           }
 
           // Core gentle pulse
