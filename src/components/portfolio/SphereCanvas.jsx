@@ -343,10 +343,10 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
 
     projectsToShow.forEach((project, i) => {
       // Calculate orbit parameters - artistic flowing motion
-      const baseRadius = 2.5 + (i * 0.32); // Wider spread for visual clarity
+      const baseRadius = 2.8 + (i * 0.38); // Wider spread for visual clarity
       const speed = 0.06 + (i % 4) * 0.025; // Slower, more majestic speeds
       const direction = i % 2 === 0 ? 1 : -1; // Alternate directions
-      const size = 0.22 - (i * 0.008); // Balanced proportional planets
+      const size = 0.35 - (i * 0.012); // Larger planets for better texture visibility
       const tiltX = (Math.PI / 5) * Math.sin(i * 0.8); // Flowing sinusoidal tilts
       const tiltZ = (Math.PI / 9) * ((i % 3) - 1);
 
@@ -406,31 +406,32 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
         );
       }
 
-      // ===== LAYER 3: Inner Light Glow =====
-      const innerGlowGeometry = new THREE.SphereGeometry(size * 1.15, 32, 32);
+      // ===== LAYER 3: Inner Light Glow (subtle, so texture remains visible) =====
+      const innerGlowGeometry = new THREE.SphereGeometry(size * 1.08, 32, 32);
       const innerGlowMaterial = new THREE.MeshBasicMaterial({
         color: statusPalette.light,
         transparent: true,
-        opacity: 0.35
+        opacity: 0.12,
+        side: THREE.BackSide // Render behind the planet, not over it
       });
       const innerGlow = new THREE.Mesh(innerGlowGeometry, innerGlowMaterial);
 
-      // ===== LAYER 4: Chromatic Ring (Saturn-style) =====
-      const ringGeometry = new THREE.TorusGeometry(size * 1.4, 0.025, 8, 64);
+      // ===== LAYER 4: Chromatic Ring (Saturn-style) - Enhanced visibility =====
+      const ringGeometry = new THREE.TorusGeometry(size * 1.5, 0.035, 12, 80);
       const ringMaterial = new THREE.MeshBasicMaterial({
         color: statusPalette.accent,
         transparent: true,
-        opacity: 0.85
+        opacity: 0.92
       });
       const chromaticRing = new THREE.Mesh(ringGeometry, ringMaterial);
       chromaticRing.rotation.x = Math.PI / 2;
 
-      // ===== LAYER 5: Secondary Ring (offset angle) =====
-      const ring2Geometry = new THREE.TorusGeometry(size * 1.6, 0.015, 8, 48);
+      // ===== LAYER 5: Secondary Ring (offset angle) - More visible =====
+      const ring2Geometry = new THREE.TorusGeometry(size * 1.75, 0.022, 10, 64);
       const ring2Material = new THREE.MeshBasicMaterial({
         color: statusPalette.glow,
         transparent: true,
-        opacity: 0.5
+        opacity: 0.65
       });
       const secondaryRing = new THREE.Mesh(ring2Geometry, ring2Material);
       secondaryRing.rotation.x = Math.PI / 2.5;
@@ -454,21 +455,21 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       });
       const outerHalo = new THREE.Mesh(haloGeometry, haloMaterial);
 
-      // ===== LAYER 8: Orbiting Particle Dots =====
+      // ===== LAYER 8: Orbiting Particle Dots - Enhanced visibility =====
       const particleDots = new THREE.Group();
-      for (let p = 0; p < 6; p++) {
-        const dotGeometry = new THREE.SphereGeometry(size * 0.08, 8, 8);
+      for (let p = 0; p < 8; p++) {
+        const dotGeometry = new THREE.SphereGeometry(size * 0.10, 10, 10);
         const dotMaterial = new THREE.MeshBasicMaterial({
           color: statusPalette.accent,
           transparent: true,
-          opacity: 0.7
+          opacity: 0.85
         });
         const dot = new THREE.Mesh(dotGeometry, dotMaterial);
-        const dotAngle = (p / 6) * Math.PI * 2;
-        const dotRadius = size * 1.8;
+        const dotAngle = (p / 8) * Math.PI * 2;
+        const dotRadius = size * 2.0;
         dot.position.set(
           Math.cos(dotAngle) * dotRadius,
-          (Math.random() - 0.5) * size * 0.5,
+          (Math.random() - 0.5) * size * 0.6,
           Math.sin(dotAngle) * dotRadius
         );
         particleDots.add(dot);
@@ -619,9 +620,9 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
             planet.core.scale.setScalar(corePulse);
           }
 
-          // Inner glow breathing with deeper amplitude
+          // Inner glow breathing - kept subtle to not obscure texture
           if (planet.innerGlow) {
-            const glowPulse = 0.35 + Math.sin(time * 2 + planet.offset) * 0.15;
+            const glowPulse = 0.08 + Math.sin(time * 2 + planet.offset) * 0.04;
             planet.innerGlow.material.opacity = glowPulse;
           }
 
@@ -640,11 +641,11 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
             planet.secondaryRing.rotation.y = Math.cos(time * 0.3) * 0.1;
           }
 
-          // Energy aura pulse with wave sync
+          // Energy aura pulse with wave sync - subtle to not dim texture
           if (planet.energyAura) {
-            const auraPulse = 1 + Math.sin(time * 1.5 + planet.offset * 2) * 0.1 + cosmicWave * 0.5;
+            const auraPulse = 1 + Math.sin(time * 1.5 + planet.offset * 2) * 0.12 + cosmicWave * 0.5;
             planet.energyAura.scale.setScalar(auraPulse);
-            planet.energyAura.material.opacity = 0.15 + Math.sin(time * 2 + planet.offset) * 0.1;
+            planet.energyAura.material.opacity = 0.08 + Math.sin(time * 2 + planet.offset) * 0.05;
           }
 
           // Outer halo shimmer with enhanced glow
