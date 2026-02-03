@@ -23,10 +23,10 @@ const COLORS = {
   atmosphere: '#0a0908',
   atmosphereGlow: '#14120f',
 
-  // Status palettes - matching GlobeScene gold/amber theme
-  completed: { main: '#ffd700', light: '#ffe066', glow: '#fff2b3', dark: '#b8860b', accent: '#fffbeb' },
-  in_progress: { main: '#ffb700', light: '#ffc933', glow: '#ffdd44', dark: '#cc9200', accent: '#fffbeb' },
-  planning: { main: '#daa520', light: '#f0c040', glow: '#ffd54f', dark: '#a67c00', accent: '#fff8e0' }
+  // Status palettes - Distinct color scheme
+  completed: { main: '#6366f1', light: '#818cf8', glow: '#a5b4fc', dark: '#4f46e5', accent: '#eef2ff' },    // Indigo
+  in_progress: { main: '#ffd700', light: '#ffe066', glow: '#fff2b3', dark: '#b8860b', accent: '#fffbeb' },  // Gold
+  planning: { main: '#a8a29e', light: '#d6d3d1', glow: '#e7e5e4', dark: '#78716c', accent: '#f5f5f4' }       // Silver
 };
 
 // Easing functions from cinematic system
@@ -598,9 +598,9 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
                   {/* Project Title & Status */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-4">
-                      <div className={`w-3 h-3 rounded-full shadow-lg ${currentProject?.status === 'completed' ? 'bg-yellow-400 shadow-yellow-400/60' :
-                        currentProject?.status === 'in_progress' ? 'bg-amber-400 shadow-amber-400/60' :
-                          'bg-amber-600 shadow-amber-600/60'
+                      <div className={`w-3 h-3 rounded-full shadow-lg ${currentProject?.status === 'completed' ? 'bg-indigo-500 shadow-indigo-500/60' :
+                        currentProject?.status === 'in_progress' ? 'bg-yellow-400 shadow-yellow-400/60' :
+                          'bg-stone-400 shadow-stone-400/60'
                         }`} />
                       <h2 className="text-2xl font-bold text-white tracking-tight">
                         {currentProject?.title}
@@ -759,9 +759,9 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
             {/* Status Badge & Counter */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-amber-500/10">
               <div className="flex items-center gap-2.5">
-                <div className={`w-2.5 h-2.5 rounded-full ${currentProject?.status === 'completed' ? 'bg-yellow-400 shadow-yellow-400/60' :
-                  currentProject?.status === 'in_progress' ? 'bg-amber-400 shadow-amber-400/60' :
-                    'bg-amber-600 shadow-amber-600/60'
+                <div className={`w-2.5 h-2.5 rounded-full ${currentProject?.status === 'completed' ? 'bg-indigo-500 shadow-indigo-500/60' :
+                  currentProject?.status === 'in_progress' ? 'bg-yellow-400 shadow-yellow-400/60' :
+                    'bg-stone-400 shadow-stone-400/60'
                   } shadow-md`} />
                 <span className="text-xs font-semibold text-gray-300 uppercase tracking-wider">
                   {currentProject?.status?.replace('_', ' ') || 'Unknown'}

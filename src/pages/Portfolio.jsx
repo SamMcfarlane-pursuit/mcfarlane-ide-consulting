@@ -268,16 +268,16 @@ export default function Portfolio() {
             className="absolute bottom-6 left-6 z-30 flex items-center gap-6 text-xs bg-black/40 backdrop-blur-xl rounded-full px-5 py-2.5 border border-amber-500/15"
           >
             <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-lg shadow-indigo-500/50" />
+              <span className="text-indigo-300/80 font-medium">Completed</span>
+            </div>
+            <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-yellow-400 shadow-lg shadow-yellow-400/50" />
-              <span className="text-yellow-300/80 font-medium">Completed</span>
+              <span className="text-yellow-300/80 font-medium">In Progress</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-amber-400 shadow-lg shadow-amber-400/50" />
-              <span className="text-amber-300/80 font-medium">In Progress</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-amber-600 shadow-lg shadow-amber-600/50" />
-              <span className="text-amber-500/80 font-medium">Planning</span>
+              <div className="w-2 h-2 rounded-full bg-stone-400 shadow-lg shadow-stone-400/50" />
+              <span className="text-stone-300/80 font-medium">Planning</span>
             </div>
           </motion.div>
 
