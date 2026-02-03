@@ -365,7 +365,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       planetContainer.position.x = baseRadius;
 
       // ===== LAYER 1: Metallic Core (innermost) =====
-      const coreGeometry = new THREE.SphereGeometry(size * 0.6, 48, 48);
+      const coreGeometry = new THREE.SphereGeometry(size * 0.6, 32, 32); // Optimized segments
       const coreMaterial = new THREE.MeshBasicMaterial({
         color: statusPalette.dark,
         transparent: true,
@@ -437,7 +437,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       secondaryRing.rotation.y = Math.PI / 6;
 
       // ===== LAYER 6: Energy Aura =====
-      const auraGeometry = new THREE.SphereGeometry(size * 1.9, 24, 24);
+      const auraGeometry = new THREE.SphereGeometry(size * 1.9, 16, 16); // Optimized for glow
       const auraMaterial = new THREE.MeshBasicMaterial({
         color: statusPalette.glow,
         transparent: true,
@@ -446,7 +446,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       const energyAura = new THREE.Mesh(auraGeometry, auraMaterial);
 
       // ===== LAYER 7: Outer Halo (atmosphere) =====
-      const haloGeometry = new THREE.SphereGeometry(size * 2.5, 16, 16);
+      const haloGeometry = new THREE.SphereGeometry(size * 2.5, 12, 12); // Optimized for ambient glow
       const haloMaterial = new THREE.MeshBasicMaterial({
         color: statusPalette.light,
         transparent: true,
@@ -524,13 +524,19 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
 
     // Note: 3D text overlay removed - project info now in side panel
 
-    // ===== Animation Loop =====
+    // ===== Animation Loop with Delta Time for Smooth Performance =====
     let time = 0;
     let transitionProgress = 0;
+    let lastTime = performance.now();
 
     const animate = () => {
       animationFrameRef.current = requestAnimationFrame(animate);
-      time += 0.01;
+
+      // Delta time for frame-rate independent animation
+      const now = performance.now();
+      const deltaTime = Math.min((now - lastTime) / 1000, 0.1); // Cap at 100ms to prevent jumps
+      lastTime = now;
+      time += deltaTime * 0.6; // Smooth, consistent time progression
 
       // Slow, majestic rotation (matching GlobeScene)
       if (pointsRef.current) {
@@ -571,72 +577,95 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
         stars.rotation.y += 0.0002;
       });
 
-      // PREMIUM ORBITING PLANETS ANIMATION - Artistic Flowing Motion
+      // PREMIUM ORBITING PLANETS ANIMATION - Enhanced Artistic Flowing Motion
       if (orbitingPlanetsRef.current) {
         orbitingPlanetsRef.current.forEach((planet, idx) => {
-          // Smooth, flowing orbital rotation with sinusoidal variation
+          // ===== ELLIPTICAL ORBIT - Vertical oscillation for 3D depth =====
           const baseRotation = time * planet.speed + planet.offset;
+          const ellipticalPhase = baseRotation * 1.5;
+          const verticalOscillation = Math.sin(ellipticalPhase) * 0.15;
+          planet.planetContainer.position.y = verticalOscillation;
+
+          // ===== STAGGERED COSMIC WAVE - Phase-shifted flow across planets =====
+          const wavePhase = time * 0.4 + (idx * Math.PI / 4); // Staggered phases
+          const waveAmplitude = 0.08 + Math.sin(time * 0.1) * 0.03;
+          const cosmicWave = Math.sin(wavePhase) * waveAmplitude;
+
+          // Smooth, flowing orbital rotation with wave influence
           const flowVariation = Math.sin(time * 0.3 + idx * 0.7) * 0.15;
-          planet.group.rotation.y = baseRotation + flowVariation;
+          planet.group.rotation.y = baseRotation + flowVariation + cosmicWave;
 
           // Gentle orbital plane wobble for organic feel
-          planet.group.rotation.x += Math.sin(time * 0.2 + idx) * 0.0003;
-          planet.group.rotation.z += Math.cos(time * 0.15 + idx * 0.5) * 0.0002;
+          planet.group.rotation.x += Math.sin(time * 0.2 + idx) * 0.0004;
+          planet.group.rotation.z += Math.cos(time * 0.15 + idx * 0.5) * 0.0003;
+
+          // ===== BREATHING CONTAINER - Subtle scale pulsing entire planet =====
+          if (planet.planetContainer) {
+            const breathingScale = 1 + Math.sin(time * 0.7 + planet.offset * 1.5) * 0.04;
+            planet.planetContainer.scale.setScalar(breathingScale);
+          }
 
           // Self-rotation with flowing speed variation
           if (planet.planetSurface) {
-            const rotationSpeed = 0.005 + Math.sin(time * 0.5 + idx) * 0.002;
+            const rotationSpeed = 0.006 + Math.sin(time * 0.5 + idx) * 0.003;
             planet.planetSurface.rotation.y += rotationSpeed;
+            // Slight axial tilt oscillation
+            planet.planetSurface.rotation.x = Math.sin(time * 0.2 + idx * 0.8) * 0.08;
           }
 
-          // Core gentle pulse
+          // Core gentle pulse with enhanced glow
           if (planet.core) {
-            const corePulse = 1 + Math.sin(time * 3 + planet.offset) * 0.05;
+            const corePulse = 1 + Math.sin(time * 3 + planet.offset) * 0.06;
             planet.core.scale.setScalar(corePulse);
           }
 
-          // Inner glow breathing
+          // Inner glow breathing with deeper amplitude
           if (planet.innerGlow) {
-            const glowPulse = 0.3 + Math.sin(time * 2 + planet.offset) * 0.1;
+            const glowPulse = 0.35 + Math.sin(time * 2 + planet.offset) * 0.15;
             planet.innerGlow.material.opacity = glowPulse;
           }
 
-          // Chromatic ring rotation
+          // Chromatic ring rotation with subtle wobble
           if (planet.chromaticRing) {
-            planet.chromaticRing.rotation.z = time * 0.3;
-            const ringPulse = 0.75 + Math.sin(time * 2.5 + planet.offset) * 0.15;
+            planet.chromaticRing.rotation.z = time * 0.35;
+            planet.chromaticRing.rotation.x = Math.PI / 2 + Math.sin(time * 0.4 + idx) * 0.05;
+            const ringPulse = 0.75 + Math.sin(time * 2.5 + planet.offset) * 0.18;
             planet.chromaticRing.material.opacity = ringPulse;
           }
 
-          // Secondary ring counter-rotation
+          // Secondary ring counter-rotation with flowing tilt
           if (planet.secondaryRing) {
-            planet.secondaryRing.rotation.z = -time * 0.2;
-            planet.secondaryRing.rotation.x = Math.PI / 2.5 + Math.sin(time * 0.5) * 0.1;
+            planet.secondaryRing.rotation.z = -time * 0.25;
+            planet.secondaryRing.rotation.x = Math.PI / 2.5 + Math.sin(time * 0.5 + idx * 0.3) * 0.12;
+            planet.secondaryRing.rotation.y = Math.cos(time * 0.3) * 0.1;
           }
 
-          // Energy aura pulse
+          // Energy aura pulse with wave sync
           if (planet.energyAura) {
-            const auraPulse = 1 + Math.sin(time * 1.5 + planet.offset * 2) * 0.08;
+            const auraPulse = 1 + Math.sin(time * 1.5 + planet.offset * 2) * 0.1 + cosmicWave * 0.5;
             planet.energyAura.scale.setScalar(auraPulse);
-            planet.energyAura.material.opacity = 0.12 + Math.sin(time * 2 + planet.offset) * 0.08;
+            planet.energyAura.material.opacity = 0.15 + Math.sin(time * 2 + planet.offset) * 0.1;
           }
 
-          // Outer halo shimmer
+          // Outer halo shimmer with enhanced glow
           if (planet.outerHalo) {
-            const haloPulse = 1 + Math.sin(time * 0.8 + planet.offset) * 0.05;
+            const haloPulse = 1 + Math.sin(time * 0.8 + planet.offset) * 0.08;
             planet.outerHalo.scale.setScalar(haloPulse);
-            planet.outerHalo.material.opacity = 0.05 + Math.sin(time * 1.5 + idx) * 0.04;
+            planet.outerHalo.material.opacity = 0.06 + Math.sin(time * 1.5 + idx) * 0.05;
           }
 
-          // Particle dots orbit around planet
+          // Particle dots orbit with varied speeds
           if (planet.particleDots) {
-            planet.particleDots.rotation.y = time * 0.8;
-            planet.particleDots.rotation.x = Math.sin(time * 0.3) * 0.2;
+            planet.particleDots.rotation.y = time * 0.9 + idx * 0.2;
+            planet.particleDots.rotation.x = Math.sin(time * 0.35) * 0.25;
+            planet.particleDots.rotation.z = Math.cos(time * 0.25 + idx) * 0.1;
           }
 
-          // Orbit path glow pulse
+          // ===== ORBIT PATH SHIMMER - Animated gradient effect =====
           if (planet.path) {
-            planet.path.material.opacity = 0.08 + Math.sin(time * 2 + planet.offset) * 0.06;
+            const shimmerBase = 0.1 + Math.sin(time * 2 + planet.offset) * 0.08;
+            const shimmerHighlight = Math.sin(time * 4 + baseRotation * 2) * 0.04;
+            planet.path.material.opacity = shimmerBase + shimmerHighlight;
           }
         });
       }

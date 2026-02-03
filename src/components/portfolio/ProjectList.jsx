@@ -15,9 +15,8 @@ import {
   Eye
 } from 'lucide-react';
 
-export default function ProjectList({ projects, onProjectClick, onEdit, onDelete }) {
-  // Always admin in standalone mode
-  const isAdmin = true;
+export default function ProjectList({ projects, onProjectClick, onEdit, onDelete, isAdmin = false }) {
+  // isAdmin is passed from parent - controls visibility of edit/delete buttons
 
   const statusIcons = {
     completed: <CheckCircle className="w-4 h-4" />,

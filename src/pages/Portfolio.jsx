@@ -333,6 +333,7 @@ export default function Portfolio() {
               onProjectClick={setSelectedProject}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              isAdmin={isAdmin}
             />
           </motion.div>
         )}
