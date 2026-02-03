@@ -37,6 +37,7 @@ export default function Portfolio() {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [selectedTechCategory, setSelectedTechCategory] = useState(null);
+  const [selectedTech, setSelectedTech] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
@@ -70,6 +71,15 @@ export default function Portfolio() {
   useEffect(() => {
     let filtered = projects;
 
+    // Filter by individual technology selection
+    if (selectedTech) {
+      filtered = filtered.filter(p =>
+        p.technologies?.some(tech =>
+          tech.toLowerCase().includes(selectedTech.toLowerCase())
+        )
+      );
+    }
+
     // Filter by category (uses project.category field AND technology keywords)
     if (selectedTechCategory) {
       const techKeywords = {
@@ -97,7 +107,7 @@ export default function Portfolio() {
     }
 
     setFilteredProjects(filtered);
-  }, [selectedTechCategory, selectedStatus, projects]);
+  }, [selectedTechCategory, selectedTech, selectedStatus, projects]);
 
   const loadProjects = async () => {
     setLoading(true);
@@ -277,6 +287,8 @@ export default function Portfolio() {
               <TechStackFilter
                 selectedCategory={selectedTechCategory}
                 onCategoryChange={setSelectedTechCategory}
+                selectedTech={selectedTech}
+                onTechChange={setSelectedTech}
               />
             </motion.div>
           </div>

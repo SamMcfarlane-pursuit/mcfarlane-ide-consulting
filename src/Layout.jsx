@@ -1,16 +1,18 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home } from 'lucide-react';
+import { Home, Sun, Moon } from 'lucide-react';
 import NavigationTracker from '@/lib/NavigationTracker';
 import { createPageUrl } from '@/utils';
 import Footer from './components/layout/Footer';
+import { useTheme } from '@/lib/ThemeContext';
 
 export default function Layout({ children }) {
   const location = useLocation();
   const currentPath = location.pathname;
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
+    <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'bg-slate-950' : 'bg-slate-100'}`}>
       <NavigationTracker />
 
       {/* Vibrant header with glow effects */}
@@ -66,6 +68,19 @@ export default function Layout({ children }) {
               >
                 <span className="font-semibold">Hire Me</span>
               </Link>
+
+              {/* Theme Toggle */}
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-lg text-gray-400 hover:text-amber-300 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/20 transition-all duration-300"
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
+              </button>
             </nav>
           </div>
         </div>

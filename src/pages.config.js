@@ -1,9 +1,12 @@
-import Portfolio from './pages/Portfolio';
-import AddProject from './pages/AddProject';
-import EditProject from './pages/EditProject';
-import About from './pages/About';
-import Contact from './pages/Contact';
+import { lazy } from 'react';
 import __Layout from './Layout.jsx';
+
+// Lazy-loaded pages for code splitting
+const Portfolio = lazy(() => import('./pages/Portfolio'));
+const AddProject = lazy(() => import('./pages/AddProject'));
+const EditProject = lazy(() => import('./pages/EditProject'));
+const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
 
 
 export const PAGES = {
