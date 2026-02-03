@@ -693,18 +693,77 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
             </button>
           </div>
 
-          {/* Dots Navigation - Top */}
-          <div className="absolute top-8 left-1/2 -translate-x-1/2 flex gap-2">
-            {projects.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToProject(index)}
-                className={`transition-all duration-300 ease-out ${index === currentIndex
-                  ? 'w-8 h-2 bg-gradient-to-r from-amber-400 to-yellow-400 rounded-full shadow-lg shadow-amber-400/50'
-                  : 'w-2 h-2 bg-gray-600/70 hover:bg-amber-400/50 rounded-full'
-                  }`}
-              />
-            ))}
+          {/* Orbital Project Labels - Around the Globe Perimeter */}
+          <div className="absolute inset-0 pointer-events-none" style={{ perspective: '1000px' }}>
+            {projects.slice(0, 8).map((project, index) => {
+              // Calculate position around the globe (elliptical orbit)
+              const angle = (index / Math.min(projects.length, 8)) * Math.PI * 2 - Math.PI / 2;
+              const radiusX = 38; // % from center horizontally
+              const radiusY = 32; // % from center vertically  
+              const x = 50 + Math.cos(angle) * radiusX;
+              const y = 50 + Math.sin(angle) * radiusY;
+              const isActive = index === currentIndex;
+
+              // Get status color
+              const statusColor = project.status === 'completed' ? 'indigo' :
+                project.status === 'in_progress' ? 'yellow' : 'stone';
+
+              return (
+                <button
+                  key={project.id || index}
+                  onClick={() => goToProject(index)}
+                  className={`pointer-events-auto absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out ${isActive
+                    ? 'scale-110 z-20'
+                    : 'scale-100 z-10 opacity-70 hover:opacity-100 hover:scale-105'
+                    }`}
+                  style={{
+                    left: `${x}%`,
+                    top: `${y}%`,
+                  }}
+                >
+                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full backdrop-blur-xl border transition-all duration-300 ${isActive
+                    ? project.status === 'completed'
+                      ? 'bg-indigo-500/30 border-indigo-400/60 shadow-lg shadow-indigo-500/30'
+                      : project.status === 'in_progress'
+                        ? 'bg-yellow-500/30 border-yellow-400/60 shadow-lg shadow-yellow-500/30'
+                        : 'bg-stone-500/30 border-stone-400/60 shadow-lg shadow-stone-500/30'
+                    : 'bg-black/60 border-white/20 hover:border-amber-400/40'
+                    }`}>
+                    {/* Status Dot */}
+                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${project.status === 'completed' ? 'bg-indigo-500' :
+                      project.status === 'in_progress' ? 'bg-yellow-400' : 'bg-stone-400'
+                      }`} />
+
+                    {/* Project Name */}
+                    <span className={`text-xs font-medium whitespace-nowrap max-w-[100px] truncate ${isActive ? 'text-white' : 'text-gray-300'
+                      }`}>
+                      {project.title?.split(' ').slice(0, 2).join(' ')}
+                    </span>
+
+                    {/* Thumbnail Preview (if active and has image) */}
+                    {isActive && project.image && (
+                      <div className="w-6 h-6 rounded-md overflow-hidden border border-white/30 flex-shrink-0">
+                        <img
+                          src={project.image}
+                          alt=""
+                          className="w-full h-full object-cover"
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+
+            {/* Show count if more than 8 projects */}
+            {projects.length > 8 && (
+              <div className="pointer-events-auto absolute left-1/2 bottom-[15%] -translate-x-1/2">
+                <span className="px-3 py-1 text-xs text-gray-400 bg-black/40 backdrop-blur-sm rounded-full border border-white/10">
+                  +{projects.length - 8} more
+                </span>
+              </div>
+            )}
           </div>
         </>
       ) : (
