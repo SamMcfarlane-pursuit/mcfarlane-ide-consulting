@@ -151,7 +151,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 4)); // Support up to 4K displays
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.8; // Enhanced brightness for premium visual impact
+    renderer.toneMappingExposure = 2.2; // Maximum brightness for stunning visual impact
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.shadowMap.enabled = false; // Disable shadows for performance
     currentMount.appendChild(renderer.domElement);
@@ -164,15 +164,15 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     const project = projects[currentIndex] || projects[0];
     const palette = getStatusPalette(project.status);
 
-    // ===== Cinematic Lighting (matching GlobeScene) =====
-    const ambientLight = new THREE.AmbientLight(0xfff8e0, 0.2);
+    // ===== Cinematic Lighting (enhanced brightness) =====
+    const ambientLight = new THREE.AmbientLight(0xfff8e0, 0.4);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.PointLight(0xffd700, 0.3, 100);
+    const mainLight = new THREE.PointLight(0xffd700, 0.5, 100);
     mainLight.position.set(10, 10, 10);
     scene.add(mainLight);
 
-    const fillLight = new THREE.PointLight(0xc9a227, 0.15, 100);
+    const fillLight = new THREE.PointLight(0xc9a227, 0.3, 100);
     fillLight.position.set(-10, -10, -10);
     scene.add(fillLight);
 
@@ -733,15 +733,15 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
           {/* Three.js Canvas - Full Screen */}
           <div ref={mountRef} className="absolute inset-0" style={{ touchAction: 'none' }} />
 
-          {/* Compact Info Bar - Bottom with Thumbnail */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent pt-20 pb-6 px-8">
-            <div className="max-w-5xl mx-auto">
+          {/* Enhanced Info Bar - Bottom with Clear Hierarchy */}
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/85 to-transparent pt-16 pb-8 px-8">
+            <div className="max-w-6xl mx-auto">
               {/* Main Content Row with Thumbnail */}
-              <div className="flex items-start gap-6">
-                {/* Project Thumbnail */}
+              <div className="flex items-start gap-8">
+                {/* Project Thumbnail - Larger */}
                 {currentProject?.image && (
                   <div
-                    className="w-32 h-20 flex-shrink-0 rounded-xl overflow-hidden border border-amber-500/30 shadow-lg shadow-amber-500/10 bg-slate-900/80"
+                    className="w-40 h-28 flex-shrink-0 rounded-2xl overflow-hidden border-2 border-amber-400/40 shadow-2xl shadow-amber-500/20 bg-slate-900/90"
                     style={{
                       opacity: isTransitioning ? 0.5 : 1,
                       transform: isTransitioning ? 'scale(0.95)' : 'scale(1)',
@@ -765,47 +765,47 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
 
                 {/* Project Info */}
                 <div className="flex-1 min-w-0">
-                  {/* Project Title & Status */}
-                  <div className="flex items-center justify-between mb-3">
+                  {/* Project Title & Status - Enhanced Visibility */}
+                  <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-4">
-                      <div className={`w-3 h-3 rounded-full shadow-lg ${currentProject?.status === 'completed' ? 'bg-indigo-500 shadow-indigo-500/60' :
-                        currentProject?.status === 'in_progress' ? 'bg-yellow-400 shadow-yellow-400/60' :
-                          'bg-stone-400 shadow-stone-400/60'
+                      <div className={`w-4 h-4 rounded-full shadow-lg ring-2 ring-offset-2 ring-offset-black ${currentProject?.status === 'completed' ? 'bg-indigo-400 ring-indigo-400/50 shadow-indigo-400/80' :
+                        currentProject?.status === 'in_progress' ? 'bg-yellow-400 ring-yellow-400/50 shadow-yellow-400/80' :
+                          'bg-stone-400 ring-stone-400/50 shadow-stone-400/80'
                         }`} />
-                      <h2 className="text-2xl font-bold text-white tracking-tight">
+                      <h2 className="text-3xl font-bold text-white tracking-tight drop-shadow-lg">
                         {currentProject?.title}
                       </h2>
                       {currentProject?.year && (
-                        <span className="px-3 py-1 text-xs font-medium text-amber-300 bg-amber-500/15 border border-amber-500/25 rounded-full">
+                        <span className="px-4 py-1.5 text-sm font-semibold text-amber-200 bg-amber-500/25 border border-amber-400/40 rounded-full shadow-lg">
                           {currentProject.year}
                         </span>
                       )}
                     </div>
-                    <span className="text-sm text-amber-400/80 font-medium">
+                    <span className="text-base text-amber-300 font-bold bg-black/50 px-4 py-2 rounded-full border border-amber-500/30">
                       {currentIndex + 1} / {projects.length}
                     </span>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-gray-300/90 text-sm leading-relaxed mb-3 max-w-2xl line-clamp-2">
+                  {/* Description - Larger text */}
+                  <p className="text-gray-100 text-base leading-relaxed mb-4 max-w-3xl">
                     {currentProject?.description}
                   </p>
 
                   {/* Tech Stack + Actions Row */}
                   <div className="flex items-center justify-between gap-6">
-                    {/* Tech Stack */}
-                    <div className="flex flex-wrap gap-2">
-                      {currentProject?.technologies?.slice(0, 5).map((tech, i) => (
+                    {/* Tech Stack - High Contrast Badges */}
+                    <div className="flex flex-wrap gap-2.5">
+                      {currentProject?.technologies?.slice(0, 6).map((tech, i) => (
                         <span
                           key={i}
-                          className="px-2.5 py-1 text-xs bg-amber-500/15 text-amber-200/90 border border-amber-500/25 rounded-lg"
+                          className="px-3 py-1.5 text-sm font-medium bg-amber-500/30 text-white border border-amber-400/50 rounded-lg shadow-md backdrop-blur-sm"
                         >
                           {tech}
                         </span>
                       ))}
-                      {currentProject?.technologies?.length > 5 && (
-                        <span className="px-2 py-1 text-xs text-gray-500">
-                          +{currentProject.technologies.length - 5}
+                      {currentProject?.technologies?.length > 6 && (
+                        <span className="px-3 py-1.5 text-sm text-amber-300 font-medium bg-black/40 rounded-lg border border-amber-500/30">
+                          +{currentProject.technologies.length - 6} more
                         </span>
                       )}
                     </div>
