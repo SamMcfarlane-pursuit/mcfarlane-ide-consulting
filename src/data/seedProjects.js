@@ -10,7 +10,7 @@ export const githubProjects = [
         technologies: ['React', 'Three.js', 'Framer Motion', 'JavaScript', 'Vite', 'TailwindCSS'],
         github_url: 'https://github.com/SamMcfarlane-pursuit/novasphere-portfolio',
         live_url: null,
-        image: '/assets/projects/novasphere.jpg',
+        image: '/assets/projects/novasphere.png',
         status: 'in_progress',
         year: 2026,
         featured: true,

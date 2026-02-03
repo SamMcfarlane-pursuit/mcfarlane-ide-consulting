@@ -142,15 +142,18 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       antialias: true,
       alpha: false,
       powerPreference: 'high-performance',
-      precision: 'highp'
+      precision: 'highp',
+      stencil: false,
+      depth: true
     });
 
-    // 4K rendering - matching cinematic system
+    // 4K ULTRA rendering - maximum quality for crisp visuals
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 4)); // Support up to 4K displays
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.3; // Slightly brighter for gold pop
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = false; // Disable shadows for performance
     currentMount.appendChild(renderer.domElement);
 
     sceneRef.current = scene;
@@ -331,13 +334,15 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     scene.add(floatingParticles);
     floatingParticlesRef.current = floatingParticles;
 
-    // ===== ORBITING MINI-PLANETS (Universe Effect) - More Visible =====
+    // ===== ORBITING MINI-PLANETS (Unified Gold/Amber Palette) =====
     const orbitingPlanets = [];
+    // Cohesive gold-amber color spectrum for all planets
     const orbitConfigs = [
-      { radius: 2.8, speed: 0.5, size: 0.18, tiltX: Math.PI / 10, tiltZ: 0, color: '#ffffff' },
-      { radius: 3.2, speed: -0.35, size: 0.14, tiltX: Math.PI / 5, tiltZ: Math.PI / 8, color: COLORS.coreGlow },
-      { radius: 3.6, speed: 0.25, size: 0.10, tiltX: -Math.PI / 6, tiltZ: -Math.PI / 10, color: COLORS.particleGold },
-      { radius: 3.0, speed: -0.45, size: 0.08, tiltX: Math.PI / 4, tiltZ: Math.PI / 5, color: COLORS.midGlow },
+      { radius: 2.8, speed: 0.4, size: 0.20, tiltX: Math.PI / 10, tiltZ: 0, color: '#ffd700', glowColor: '#ffec8b' },           // Bright Gold
+      { radius: 3.3, speed: -0.3, size: 0.16, tiltX: Math.PI / 5, tiltZ: Math.PI / 8, color: '#ffb700', glowColor: '#ffc933' },  // Amber
+      { radius: 3.7, speed: 0.22, size: 0.12, tiltX: -Math.PI / 6, tiltZ: -Math.PI / 10, color: '#f0c040', glowColor: '#fff2b3' }, // Light Gold
+      { radius: 3.0, speed: -0.38, size: 0.10, tiltX: Math.PI / 4, tiltZ: Math.PI / 5, color: '#daa520', glowColor: '#ffd54f' },  // Goldenrod
+      { radius: 4.0, speed: 0.18, size: 0.08, tiltX: -Math.PI / 8, tiltZ: Math.PI / 6, color: '#cc9200', glowColor: '#ffdd44' },  // Deep Amber
     ];
 
     orbitConfigs.forEach((config, i) => {
@@ -346,35 +351,35 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       orbitGroup.rotation.x = config.tiltX;
       orbitGroup.rotation.z = config.tiltZ;
 
-      // Mini planet core with glow
+      // Mini planet core - high detail for 4K
       const planetCore = new THREE.Mesh(
-        new THREE.SphereGeometry(config.size, 16, 16),
+        new THREE.SphereGeometry(config.size, 32, 32), // Higher segments for smooth spheres
         new THREE.MeshBasicMaterial({
           color: config.color,
           transparent: true,
-          opacity: 0.95
+          opacity: 1.0 // Full opacity for crisp planets
         })
       );
       planetCore.position.x = config.radius;
 
-      // Inner glow
+      // Inner glow - uses dedicated glow color
       const innerGlowMini = new THREE.Mesh(
-        new THREE.SphereGeometry(config.size * 1.5, 12, 12),
+        new THREE.SphereGeometry(config.size * 1.6, 24, 24),
         new THREE.MeshBasicMaterial({
-          color: config.color,
+          color: config.glowColor || config.color,
           transparent: true,
-          opacity: 0.4
+          opacity: 0.5
         })
       );
       innerGlowMini.position.x = config.radius;
 
-      // Outer glow
+      // Outer halo - soft glow effect
       const outerGlowMini = new THREE.Mesh(
-        new THREE.SphereGeometry(config.size * 2.5, 10, 10),
+        new THREE.SphereGeometry(config.size * 2.8, 16, 16),
         new THREE.MeshBasicMaterial({
-          color: config.color,
+          color: config.glowColor || config.color,
           transparent: true,
-          opacity: 0.15
+          opacity: 0.2
         })
       );
       outerGlowMini.position.x = config.radius;
@@ -558,80 +563,111 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
           {/* Three.js Canvas - Full Screen */}
           <div ref={mountRef} className="absolute inset-0" style={{ touchAction: 'none' }} />
 
-          {/* Compact Info Bar - Bottom */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent pt-16 pb-6 px-8">
-            <div className="max-w-4xl mx-auto">
-              {/* Project Title & Status */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-4">
-                  <div className={`w-3 h-3 rounded-full shadow-lg ${currentProject?.status === 'completed' ? 'bg-yellow-400 shadow-yellow-400/60' :
-                      currentProject?.status === 'in_progress' ? 'bg-amber-400 shadow-amber-400/60' :
-                        'bg-amber-600 shadow-amber-600/60'
-                    }`} />
-                  <h2 className="text-3xl font-bold text-white tracking-tight">
-                    {currentProject?.title}
-                  </h2>
-                  {currentProject?.year && (
-                    <span className="px-3 py-1 text-xs font-medium text-amber-300 bg-amber-500/15 border border-amber-500/25 rounded-full">
-                      {currentProject.year}
-                    </span>
-                  )}
-                </div>
-                <span className="text-sm text-amber-400/80 font-medium">
-                  {currentIndex + 1} / {projects.length}
-                </span>
-              </div>
+          {/* Compact Info Bar - Bottom with Thumbnail */}
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent pt-20 pb-6 px-8">
+            <div className="max-w-5xl mx-auto">
+              {/* Main Content Row with Thumbnail */}
+              <div className="flex items-start gap-6">
+                {/* Project Thumbnail */}
+                {currentProject?.image && (
+                  <div
+                    className="w-32 h-20 flex-shrink-0 rounded-xl overflow-hidden border border-amber-500/30 shadow-lg shadow-amber-500/10 bg-slate-900/80"
+                    style={{
+                      opacity: isTransitioning ? 0.5 : 1,
+                      transform: isTransitioning ? 'scale(0.95)' : 'scale(1)',
+                      transition: 'all 0.4s ease-out'
+                    }}
+                  >
+                    <img
+                      src={currentProject.image}
+                      alt={currentProject.title}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        target.style.display = 'none';
+                        if (target.parentElement) {
+                          target.parentElement.style.background = 'linear-gradient(135deg, #ffd70020, #ffb70010)';
+                        }
+                      }}
+                    />
+                  </div>
+                )}
 
-              {/* Description */}
-              <p className="text-gray-300/90 text-sm leading-relaxed mb-4 max-w-2xl">
-                {currentProject?.description}
-              </p>
-
-              {/* Tech Stack + Actions Row */}
-              <div className="flex items-center justify-between gap-6">
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2">
-                  {currentProject?.technologies?.slice(0, 6).map((tech, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 text-xs bg-amber-500/15 text-amber-200/90 border border-amber-500/25 rounded-lg"
-                    >
-                      {tech}
+                {/* Project Info */}
+                <div className="flex-1 min-w-0">
+                  {/* Project Title & Status */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-3 h-3 rounded-full shadow-lg ${currentProject?.status === 'completed' ? 'bg-yellow-400 shadow-yellow-400/60' :
+                        currentProject?.status === 'in_progress' ? 'bg-amber-400 shadow-amber-400/60' :
+                          'bg-amber-600 shadow-amber-600/60'
+                        }`} />
+                      <h2 className="text-2xl font-bold text-white tracking-tight">
+                        {currentProject?.title}
+                      </h2>
+                      {currentProject?.year && (
+                        <span className="px-3 py-1 text-xs font-medium text-amber-300 bg-amber-500/15 border border-amber-500/25 rounded-full">
+                          {currentProject.year}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-sm text-amber-400/80 font-medium">
+                      {currentIndex + 1} / {projects.length}
                     </span>
-                  ))}
-                  {currentProject?.technologies?.length > 6 && (
-                    <span className="px-2 py-1 text-xs text-gray-500">
-                      +{currentProject.technologies.length - 6} more
-                    </span>
-                  )}
-                </div>
+                  </div>
 
-                {/* Action Buttons */}
-                <div className="flex gap-3 flex-shrink-0">
-                  {currentProject?.live_url && (
-                    <a
-                      href={currentProject.live_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500/25 to-yellow-500/20 text-amber-200 border border-amber-500/40 rounded-xl text-sm font-medium hover:from-amber-500/35 hover:to-yellow-500/30 transition-all"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      View Live
-                    </a>
-                  )}
-                  {currentProject?.github_url && (
-                    <a
-                      href={currentProject.github_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-2 px-5 py-2.5 bg-slate-800/80 text-gray-300 border border-slate-600/50 rounded-xl text-sm font-medium hover:text-white hover:border-amber-500/40 transition-all"
-                    >
-                      <Github className="w-4 h-4" />
-                      Source
-                    </a>
-                  )}
+                  {/* Description */}
+                  <p className="text-gray-300/90 text-sm leading-relaxed mb-3 max-w-2xl line-clamp-2">
+                    {currentProject?.description}
+                  </p>
+
+                  {/* Tech Stack + Actions Row */}
+                  <div className="flex items-center justify-between gap-6">
+                    {/* Tech Stack */}
+                    <div className="flex flex-wrap gap-2">
+                      {currentProject?.technologies?.slice(0, 5).map((tech, i) => (
+                        <span
+                          key={i}
+                          className="px-2.5 py-1 text-xs bg-amber-500/15 text-amber-200/90 border border-amber-500/25 rounded-lg"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {currentProject?.technologies?.length > 5 && (
+                        <span className="px-2 py-1 text-xs text-gray-500">
+                          +{currentProject.technologies.length - 5}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-3 flex-shrink-0">
+                      {currentProject?.live_url && (
+                        <a
+                          href={currentProject.live_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500/25 to-yellow-500/20 text-amber-200 border border-amber-500/40 rounded-xl text-sm font-medium hover:from-amber-500/35 hover:to-yellow-500/30 transition-all"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          View Live
+                        </a>
+                      )}
+                      {currentProject?.github_url && (
+                        <a
+                          href={currentProject.github_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex items-center gap-2 px-4 py-2 bg-slate-800/80 text-gray-300 border border-slate-600/50 rounded-xl text-sm font-medium hover:text-white hover:border-amber-500/40 transition-all"
+                        >
+                          <Github className="w-4 h-4" />
+                          Source
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
