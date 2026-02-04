@@ -338,13 +338,13 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     const orbitingPlanets = [];
     const textureLoader = new THREE.TextureLoader();
 
-    // Create an orbiting planet for each project (max 8 for performance)
-    const projectsToShow = projects.slice(0, 8);
+    // Create an orbiting planet for each project (all projects)
+    const projectsToShow = projects.slice(0, 11);
 
     projectsToShow.forEach((project, i) => {
-      // Calculate orbit parameters - artistic flowing motion
-      const baseRadius = 2.8 + (i * 0.38); // Wider spread for visual clarity
-      const speed = 0.06 + (i % 4) * 0.025; // Slower, more majestic speeds
+      // Calculate orbit parameters - smoother, more elegant motion
+      const baseRadius = 2.8 + (i * 0.35); // Wider spread for visual clarity
+      const speed = 0.035 + (i % 4) * 0.012; // Slower, more majestic speeds
       const direction = i % 2 === 0 ? 1 : -1; // Alternate directions
       const size = 0.35 - (i * 0.012); // Larger planets for better texture visibility
       const tiltX = (Math.PI / 5) * Math.sin(i * 0.8); // Flowing sinusoidal tilts
@@ -529,6 +529,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     let time = 0;
     let transitionProgress = 0;
     let lastTime = performance.now();
+    const startTime = performance.now(); // For staggered entrance animation
 
     const animate = () => {
       animationFrameRef.current = requestAnimationFrame(animate);
@@ -537,7 +538,10 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       const now = performance.now();
       const deltaTime = Math.min((now - lastTime) / 1000, 0.1); // Cap at 100ms to prevent jumps
       lastTime = now;
-      time += deltaTime * 0.6; // Smooth, consistent time progression
+      time += deltaTime * 0.5; // Slightly slower time progression for smoother feel
+
+      // Calculate elapsed time for entrance animation
+      const elapsedTime = (now - startTime) / 1000;
 
       // Slow, majestic rotation (matching GlobeScene)
       if (pointsRef.current) {
@@ -581,28 +585,40 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       // PREMIUM ORBITING PLANETS ANIMATION - Enhanced Artistic Flowing Motion
       if (orbitingPlanetsRef.current) {
         orbitingPlanetsRef.current.forEach((planet, idx) => {
+          // ===== STAGGERED ENTRANCE ANIMATION =====
+          const entranceDelay = idx * 0.15; // 150ms delay per planet
+          const entranceProgress = Math.min(Math.max((elapsedTime - entranceDelay) / 1.0, 0), 1); // 1 second fade-in
+          const entranceEase = 1 - Math.pow(1 - entranceProgress, 3); // Ease-out cubic
+
+          // Apply entrance animation to planet container
+          if (planet.planetContainer) {
+            planet.group.visible = entranceProgress > 0;
+            const entranceScale = 0.5 + entranceEase * 0.5; // Start at 50% scale, grow to 100%
+            planet.planetContainer.scale.setScalar(entranceScale);
+          }
+
           // ===== ELLIPTICAL ORBIT - Vertical oscillation for 3D depth =====
           const baseRotation = time * planet.speed + planet.offset;
           const ellipticalPhase = baseRotation * 1.5;
-          const verticalOscillation = Math.sin(ellipticalPhase) * 0.15;
+          const verticalOscillation = Math.sin(ellipticalPhase) * 0.12; // Slightly reduced
           planet.planetContainer.position.y = verticalOscillation;
 
           // ===== STAGGERED COSMIC WAVE - Phase-shifted flow across planets =====
-          const wavePhase = time * 0.4 + (idx * Math.PI / 4); // Staggered phases
-          const waveAmplitude = 0.08 + Math.sin(time * 0.1) * 0.03;
+          const wavePhase = time * 0.3 + (idx * Math.PI / 5); // Slower, wider stagger
+          const waveAmplitude = 0.05 + Math.sin(time * 0.08) * 0.02; // Reduced amplitude
           const cosmicWave = Math.sin(wavePhase) * waveAmplitude;
 
           // Smooth, flowing orbital rotation with wave influence
-          const flowVariation = Math.sin(time * 0.3 + idx * 0.7) * 0.15;
+          const flowVariation = Math.sin(time * 0.25 + idx * 0.6) * 0.1; // Gentler flow
           planet.group.rotation.y = baseRotation + flowVariation + cosmicWave;
 
           // Gentle orbital plane wobble for organic feel
-          planet.group.rotation.x += Math.sin(time * 0.2 + idx) * 0.0004;
-          planet.group.rotation.z += Math.cos(time * 0.15 + idx * 0.5) * 0.0003;
+          planet.group.rotation.x += Math.sin(time * 0.15 + idx) * 0.0003;
+          planet.group.rotation.z += Math.cos(time * 0.12 + idx * 0.4) * 0.0002;
 
-          // ===== BREATHING CONTAINER - Subtle scale pulsing entire planet =====
-          if (planet.planetContainer) {
-            const breathingScale = 1 + Math.sin(time * 0.7 + planet.offset * 1.5) * 0.04;
+          // ===== BREATHING CONTAINER - Subtle scale pulsing (after entrance) =====
+          if (planet.planetContainer && entranceProgress >= 1) {
+            const breathingScale = 1 + Math.sin(time * 0.6 + planet.offset * 1.5) * 0.03;
             planet.planetContainer.scale.setScalar(breathingScale);
           }
 

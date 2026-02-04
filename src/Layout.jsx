@@ -61,12 +61,19 @@ export default function Layout({ children }) {
               </Link>
               <Link
                 to={createPageUrl('Contact')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${currentPath === '/Contact'
+                className={`relative flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 group ${currentPath === '/Contact'
                   ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-900 shadow-lg shadow-amber-500/30 border border-amber-400'
                   : 'bg-gradient-to-r from-amber-500/20 to-yellow-500/15 text-amber-300 hover:from-amber-500/30 hover:to-yellow-500/25 border border-amber-400/40 hover:border-amber-400/60'
                   }`}
               >
+                {/* Animated glow ring */}
+                <span className="absolute inset-0 rounded-lg animate-pulse bg-gradient-to-r from-amber-500/40 to-yellow-500/40 blur-md -z-10" />
                 <span className="font-semibold">Hire Me</span>
+                {/* Availability badge */}
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
               </Link>
 
               {/* Theme Toggle */}
