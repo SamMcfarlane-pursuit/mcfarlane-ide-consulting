@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import * as THREE from 'three';
 import { ChevronLeft, ChevronRight, ExternalLink, Github } from 'lucide-react';
+import { getQualityPreset, getLODSettings, QUALITY_PRESETS } from '@/lib/LODManager';
 
 // Unified Color Palette - Matching Cinematic Intro System
 const COLORS = {
@@ -52,6 +53,8 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [lodSettings, setLodSettings] = useState(QUALITY_PRESETS.high); // Default to high until detected
+  const [qualityPreset, setQualityPreset] = useState('high');
 
   const currentProject = projects[currentIndex] || projects[0];
 
@@ -92,6 +95,17 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [nextProject, prevProject]);
+
+  // Initialize LOD settings based on device capabilities
+  useEffect(() => {
+    const initLOD = async () => {
+      const preset = await getQualityPreset();
+      setQualityPreset(preset);
+      setLodSettings(getLODSettings(preset));
+      console.log('[SphereCanvas] LOD initialized:', preset, getLODSettings(preset));
+    };
+    initLOD();
+  }, []);
 
   // Get status palette
   const getStatusPalette = useCallback((status) => {
@@ -149,7 +163,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
 
     // 4K ULTRA rendering - maximum quality for crisp visuals
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 4)); // Support up to 4K displays
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, lodSettings.pixelRatio)); // LOD-driven pixel ratio
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 2.2; // Maximum brightness for stunning visual impact
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -183,7 +197,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
 
     // ===== Dense Star Field (matching FloatingParticles) =====
     const createStarField = () => {
-      const starCount = 2500;
+      const starCount = lodSettings.stars;
       const starGeometry = new THREE.BufferGeometry();
       const positions = new Float32Array(starCount * 3);
       const colors = new Float32Array(starCount * 3);
@@ -228,7 +242,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     createStarField();
 
     // ===== Fibonacci Particle Globe (matching ParticleGlobe from GlobeScene) =====
-    const particleCount = 4000;
+    const particleCount = lodSettings.globeParticles;
     const globeRadius = 2;
     const { positions, colors } = generateFibonacciSphere(particleCount, globeRadius);
 
@@ -250,7 +264,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     pointsRef.current = particleGlobe;
 
     // ===== Wireframe Sphere (structural weight) =====
-    const wireframeGeometry = new THREE.SphereGeometry(globeRadius, 48, 48);
+    const wireframeGeometry = new THREE.SphereGeometry(globeRadius, lodSettings.wireframeSegments, lodSettings.wireframeSegments);
     const wireframeMaterial = new THREE.MeshBasicMaterial({
       color: COLORS.orbit,
       wireframe: true,
@@ -262,7 +276,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     wireframeRef.current = wireframe;
 
     // ===== Inner Atmosphere Glow =====
-    const innerGlowGeometry = new THREE.SphereGeometry(globeRadius * 0.98, 64, 64);
+    const innerGlowGeometry = new THREE.SphereGeometry(globeRadius * 0.98, lodSettings.sphereSegments, lodSettings.sphereSegments);
     const innerGlowMaterial = new THREE.MeshBasicMaterial({
       color: palette.glow,
       transparent: true,
@@ -274,7 +288,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     innerGlowRef.current = innerGlow;
 
     // ===== Outer Atmosphere Glow (matching GlobeScene glow layer) =====
-    const glowGeometry = new THREE.SphereGeometry(globeRadius * 1.15, 32, 32);
+    const glowGeometry = new THREE.SphereGeometry(globeRadius * 1.15, Math.floor(lodSettings.sphereSegments * 0.5), Math.floor(lodSettings.sphereSegments * 0.5));
     const glowMaterial = new THREE.MeshBasicMaterial({
       color: palette.light,
       transparent: true,
@@ -286,7 +300,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     glowRef.current = glow;
 
     // ===== Status Ring (Saturn-like orbit ring) =====
-    const ringGeometry = new THREE.RingGeometry(globeRadius * 1.25, globeRadius * 1.4, 128);
+    const ringGeometry = new THREE.RingGeometry(globeRadius * 1.25, globeRadius * 1.4, lodSettings.ringSegments);
     const ringMaterial = new THREE.MeshBasicMaterial({
       color: palette.main,
       transparent: true,
@@ -299,7 +313,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     ringRef.current = ring;
 
     // ===== Outer Glow Ring =====
-    const outerRingGeometry = new THREE.RingGeometry(globeRadius * 1.4, globeRadius * 1.55, 128);
+    const outerRingGeometry = new THREE.RingGeometry(globeRadius * 1.4, globeRadius * 1.55, lodSettings.ringSegments);
     const outerRingMaterial = new THREE.MeshBasicMaterial({
       color: palette.glow,
       transparent: true,
@@ -312,7 +326,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
     outerRingRef.current = outerRing;
 
     // ===== Floating Ambient Particles (matching GlobeScene) =====
-    const floatingCount = 200;
+    const floatingCount = lodSettings.floating;
     const floatingGeometry = new THREE.BufferGeometry();
     const floatingPositions = new Float32Array(floatingCount * 3);
 
@@ -457,7 +471,8 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
 
       // ===== LAYER 8: Orbiting Particle Dots - Enhanced visibility =====
       const particleDots = new THREE.Group();
-      for (let p = 0; p < 8; p++) {
+      const dotCount = lodSettings.planetDots;
+      for (let p = 0; p < dotCount; p++) {
         const dotGeometry = new THREE.SphereGeometry(size * 0.10, 10, 10);
         const dotMaterial = new THREE.MeshBasicMaterial({
           color: statusPalette.accent,
@@ -465,7 +480,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
           opacity: 0.85
         });
         const dot = new THREE.Mesh(dotGeometry, dotMaterial);
-        const dotAngle = (p / 8) * Math.PI * 2;
+        const dotAngle = (p / dotCount) * Math.PI * 2;
         const dotRadius = size * 2.0;
         dot.position.set(
           Math.cos(dotAngle) * dotRadius,
@@ -742,7 +757,7 @@ export default function SphereCanvas({ projects, onProjectClick, selectedProject
       starsRef.current = [];
       renderer?.dispose();
     };
-  }, [projects, currentIndex, generateFibonacciSphere, getStatusPalette, onProjectClick, currentProject, isTransitioning]);
+  }, [projects, currentIndex, generateFibonacciSphere, getStatusPalette, onProjectClick, currentProject, isTransitioning, lodSettings]);
 
   // Update colors when project changes
   useEffect(() => {

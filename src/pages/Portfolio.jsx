@@ -2,142 +2,47 @@
 import React, { useState, useEffect, Suspense, useRef } from 'react';
 import { Project } from '@/entities/Project';
 import { motion } from 'framer-motion';
-import { Loader2, Plus } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 
 // Project data seeding
 import { seedProjects } from '@/data/seedProjects';
 
 // Landing components
 import GlobeScene from '../components/landing/GlobeScene';
-import IntroAnimation, { HeroText, ScrollIndicator, CinematicOverlay } from '../components/landing/IntroAnimation';
-import TechStackFilter, { techCategories } from '../components/landing/TechStackFilter';
-import StatsPanel from '../components/landing/StatsPanel';
+import IntroAnimation, { HeroText, CinematicOverlay } from '../components/landing/IntroAnimation';
 
 // Portfolio components
-import SphereCanvas from '../components/portfolio/SphereCanvas';
+import ProjectShowcase from '../components/portfolio/ProjectShowcase';
 import ProjectDetail from '../components/portfolio/ProjectDetail';
-import ProjectList from '../components/portfolio/ProjectList';
-
-// Admin detection - only show admin controls on localhost or with admin query param
-const isAdminMode = () => {
-  if (typeof window === 'undefined') return false;
-  const hostname = window.location.hostname;
-  const searchParams = new URLSearchParams(window.location.search);
-  // Admin on localhost OR with secret admin param
-  return hostname === 'localhost' ||
-    hostname === '127.0.0.1' ||
-    searchParams.get('admin') === 'true';
-};
 
 export default function Portfolio() {
   const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [selectedTechCategory, setSelectedTechCategory] = useState(null);
-  const [selectedTech, setSelectedTech] = useState(null);
-  const [selectedStatus, setSelectedStatus] = useState('all');
   const [loading, setLoading] = useState(true);
-  const [deleting, setDeleting] = useState(false);
-  const [viewMode, setViewMode] = useState('sphere');
   const [introComplete, setIntroComplete] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
 
-  const navigate = useNavigate();
   const projectsRef = useRef(null);
 
-  // Check admin status on mount
-  useEffect(() => {
-    setIsAdmin(isAdminMode());
-  }, []);
-
-  // Scroll to projects section
-  const handleViewProjects = () => {
-    projectsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
+  // Load projects on mount
   useEffect(() => {
     loadProjects();
   }, []);
 
-  useEffect(() => {
-    const handleFocus = () => loadProjects();
-    window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
-  }, []);
-
-  useEffect(() => {
-    let filtered = projects;
-
-    // Filter by individual technology selection
-    if (selectedTech) {
-      filtered = filtered.filter(p =>
-        p.technologies?.some(tech =>
-          tech.toLowerCase().includes(selectedTech.toLowerCase())
-        )
-      );
-    }
-
-    // Filter by category (uses project.category field AND technology keywords)
-    if (selectedTechCategory) {
-      const techKeywords = {
-        web: ['React', 'Next.js', 'Vue', 'JavaScript', 'TypeScript', 'Node.js', 'Vite', 'TailwindCSS'],
-        dataviz: ['D3.js', 'Chart.js', 'Recharts', 'Data Visualization', 'Data Analytics'],
-        ai: ['AI', 'ML', 'Machine Learning', 'Llama', 'Ollama', 'AI/ML', 'NLP', 'Python'],
-        ui: ['UI', 'Figma', 'Design System', 'CSS', 'Design'],
-        webgl: ['Three.js', 'WebGL', 'GLSL', 'Shaders', 'R3F', 'Framer Motion'],
-      };
-      const keywords = techKeywords[selectedTechCategory] || [];
-
-      filtered = filtered.filter(p => {
-        // Match by category field directly
-        const categoryMatch = p.category === selectedTechCategory;
-        // Also match by technology keywords
-        const techMatch = p.technologies?.some(tech =>
-          keywords.some(kw => tech.toLowerCase().includes(kw.toLowerCase()))
-        );
-        return categoryMatch || techMatch;
-      });
-    }
-
-    if (selectedStatus !== 'all') {
-      filtered = filtered.filter(p => p.status === selectedStatus);
-    }
-
-    setFilteredProjects(filtered);
-  }, [selectedTechCategory, selectedTech, selectedStatus, projects]);
-
   const loadProjects = async () => {
     setLoading(true);
     try {
-      // Auto-seed projects on first visit
       await seedProjects();
-
       const data = await Project.list('-year', 1000);
       setProjects(data);
-      setFilteredProjects(data);
     } catch (error) {
       console.error('Error loading projects:', error);
     }
     setLoading(false);
   };
 
-  const handleEdit = (project) => {
-    navigate(createPageUrl('EditProject') + `?id=${project.id}`);
-  };
-
-  const handleDelete = async (projectId) => {
-    setDeleting(true);
-    try {
-      await Project.delete(projectId);
-      setSelectedProject(null);
-      await loadProjects();
-    } catch (error) {
-      console.error('Error deleting project:', error);
-    }
-    setDeleting(false);
+  // Scroll to projects section
+  const handleViewProjects = () => {
+    projectsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   if (loading) {
@@ -148,8 +53,8 @@ export default function Portfolio() {
           animate={{ opacity: 1 }}
           className="flex flex-col items-center gap-4"
         >
-          <Loader2 className="w-8 h-8 text-white/50 animate-spin" />
-          <p className="text-gray-500 text-sm">Loading...</p>
+          <Loader2 className="w-8 h-8 text-amber-400/50 animate-spin" />
+          <p className="text-gray-500 text-sm">Loading portfolio...</p>
         </motion.div>
       </div>
     );
@@ -158,207 +63,142 @@ export default function Portfolio() {
   return (
     <IntroAnimation introComplete={introComplete}>
       <CinematicOverlay />
+
+      {/* Hero Section with Globe Animation */}
       <div className="relative h-screen bg-black overflow-hidden">
-
-        {/* ===================== UNIFIED FULL-SCREEN EXPERIENCE ===================== */}
-
-        {/* Base Globe Scene - Plays the cinematic entry animation */}
+        {/* Base Globe Scene */}
         <div className="absolute inset-0 z-0">
-          <motion.div
-            initial={{ opacity: 1 }}
-            animate={{
-              opacity: introComplete ? 0 : 1,
-              scale: introComplete ? 1.05 : 1
-            }}
-            transition={{ duration: 1.5, ease: 'easeInOut' }}
-            className="absolute inset-0"
-            style={{ pointerEvents: introComplete ? 'none' : 'auto' }}
-          >
-            <Suspense fallback={null}>
-              <GlobeScene onIntroComplete={() => setIntroComplete(true)} />
-            </Suspense>
-          </motion.div>
+          <Suspense fallback={null}>
+            <GlobeScene onIntroComplete={() => setIntroComplete(true)} />
+          </Suspense>
         </div>
 
-        {/* Hero Section - Visible during and after intro, fades when scrolling to projects */}
+        {/* Hero Content */}
         <motion.div
-          className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none"
+          className="absolute inset-0 z-10 flex flex-col items-center justify-center"
           initial={{ opacity: 0 }}
-          animate={{ opacity: introComplete ? 0 : 1 }}
-          transition={{ duration: 1.2, delay: introComplete ? 0 : 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2 }}
         >
           <HeroText
             title="Samuel McFarlane"
             subtitle="AI/ML Engineer & Full-Stack Developer building intelligent systems from first principles — from Rust backends to custom LLMs"
             tagline="Brooklyn-based • Pursuit AI Native Program"
-            profileImage="/assets/profile-photo.jpg"
+            profileImage="/assets/profile-photo.webp"
             onViewProjects={handleViewProjects}
           />
         </motion.div>
 
-        {/* ===================== PROJECT UNIVERSE - EMERGES AFTER INTRO ===================== */}
+        {/* Scroll Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: introComplete ? 1 : 0 }}
-          transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 z-20"
-          style={{ pointerEvents: introComplete ? 'auto' : 'none' }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
         >
-          {/* Full-Screen Project Globe with Integrated Info */}
-          <div className="w-full h-full" style={{
-            background: 'radial-gradient(ellipse at 50% 40%, rgba(16,13,8,0.95) 0%, rgba(8,6,4,0.98) 50%, #000 100%)'
-          }}>
-            <SphereCanvas
-              projects={filteredProjects}
-              onProjectClick={setSelectedProject}
-              selectedProject={selectedProject}
-              filterCategory={selectedTechCategory}
-              fullScreen={true}
-            />
-          </div>
-
-          {/* Top Bar - Stats & Controls Overlay */}
-          <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
-            <div className="flex items-center justify-between px-6 py-4">
-              {/* Stats Panel Inline */}
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="flex items-center gap-6"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-white">{projects.length}</span>
-                  <span className="text-xs text-amber-400/70 uppercase tracking-wider">Projects</span>
-                </div>
-                <div className="w-px h-6 bg-amber-500/20" />
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-white">15</span>
-                  <span className="text-xs text-amber-400/70 uppercase tracking-wider">Technologies</span>
-                </div>
-                <div className="w-px h-6 bg-amber-500/20" />
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-white">1</span>
-                  <span className="text-xs text-amber-400/70 uppercase tracking-wider">Years Exp</span>
-                </div>
-              </motion.div>
-
-              {/* Controls */}
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.5 }}
-                className="flex items-center gap-4"
-              >
-                {/* View Mode Toggle */}
-                <div className="flex gap-1 bg-black/50 backdrop-blur-xl rounded-lg p-1 border border-amber-500/20">
-                  {['sphere', 'grid'].map((mode) => (
-                    <button
-                      key={mode}
-                      onClick={() => setViewMode(mode)}
-                      className={`px-4 py-1.5 text-xs font-medium rounded-md transition-all duration-300 ${viewMode === mode
-                        ? 'bg-gradient-to-r from-amber-500/30 to-yellow-500/20 text-amber-200 shadow-lg shadow-amber-500/20 border border-amber-400/40'
-                        : 'text-gray-400 hover:text-amber-300 hover:bg-amber-500/10 border border-transparent'
-                        }`}
-                    >
-                      {mode === 'sphere' ? '3D' : 'Grid'}
-                    </button>
-                  ))}
-                </div>
-
-                {isAdmin && (
-                  <Link to={createPageUrl('AddProject')}>
-                    <button className="h-8 px-3 text-xs bg-gradient-to-r from-amber-500/20 to-yellow-500/15 hover:from-amber-500/30 hover:to-yellow-500/25 text-amber-200 border border-amber-400/40 hover:border-amber-400/60 backdrop-blur-xl shadow-lg shadow-amber-500/10 rounded-md font-medium transition-all duration-300 flex items-center gap-2">
-                      <Plus className="w-4 h-4" />
-                      Add Project
-                    </button>
-                  </Link>
-                )}
-              </motion.div>
-            </div>
-
-            {/* Tech Stack Filter - Compact */}
+          <button
+            onClick={handleViewProjects}
+            className="flex flex-col items-center gap-2 text-amber-400/60 hover:text-amber-400 transition-colors group"
+          >
+            <span className="text-xs uppercase tracking-widest">Explore Projects</span>
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="px-6 pb-4"
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="w-5 h-8 rounded-full border-2 border-current flex justify-center pt-1"
             >
-              <TechStackFilter
-                selectedCategory={selectedTechCategory}
-                onCategoryChange={setSelectedTechCategory}
-                selectedTech={selectedTech}
-                onTechChange={setSelectedTech}
-              />
+              <div className="w-1 h-2 bg-current rounded-full" />
             </motion.div>
+          </button>
+        </motion.div>
+      </div>
+
+      {/* Projects Section */}
+      <div ref={projectsRef}>
+        <ProjectShowcase
+          projects={projects}
+          onProjectClick={setSelectedProject}
+        />
+      </div>
+
+      {/* Hire Me Section - Clean & Concise */}
+      <section className="relative bg-black py-20 px-6">
+        {/* Ambient glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/[0.03] rounded-full blur-3xl pointer-events-none" />
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="relative max-w-2xl mx-auto text-center"
+        >
+          {/* Heading */}
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
+            Let's Build Something Great
+          </h2>
+          <p className="text-gray-400 mb-8 text-base">
+            Available for full-time roles, contract work, and collaborations.
+          </p>
+
+          {/* Service Tags - Inline */}
+          <div className="flex flex-wrap justify-center gap-2 mb-10">
+            {['Full-Stack Development', 'AI/ML Engineering', 'System Architecture'].map((tag) => (
+              <span
+                key={tag}
+                className="px-3 py-1.5 text-xs font-medium text-amber-400/90 bg-amber-500/10 border border-amber-500/20 rounded-full"
+              >
+                {tag}
+              </span>
+            ))}
           </div>
 
-          {/* Status Legend - Bottom Left */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-            className="absolute bottom-6 left-6 z-30 flex items-center gap-6 text-xs bg-black/40 backdrop-blur-xl rounded-full px-5 py-2.5 border border-amber-500/15"
-          >
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-lg shadow-indigo-500/50" />
-              <span className="text-indigo-300/80 font-medium">Completed</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-yellow-400 shadow-lg shadow-yellow-400/50" />
-              <span className="text-yellow-300/80 font-medium">In Progress</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-stone-400 shadow-lg shadow-stone-400/50" />
-              <span className="text-stone-300/80 font-medium">Planning</span>
-            </div>
-          </motion.div>
-
-          {/* Source Code Link - Bottom Right */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.4, duration: 0.8 }}
-            className="absolute bottom-6 right-6 z-30"
-          >
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
+            <a
+              href="mailto:samuelmcfarlane.dev@gmail.com"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 text-black text-sm font-semibold hover:from-amber-400 hover:to-yellow-400 transition-all duration-200 shadow-lg shadow-amber-500/20"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              Get in Touch
+            </a>
             <a
               href="https://github.com/SamMcfarlane"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-xs text-gray-500 hover:text-amber-400 transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-gray-300 text-sm font-medium hover:text-white hover:bg-white/5 transition-all duration-200 border border-white/10 hover:border-white/20"
             >
-              <span>◇ Source</span>
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+              </svg>
+              GitHub
             </a>
-          </motion.div>
-        </motion.div>
+            <a
+              href="https://linkedin.com/in/samuelmcfarlane"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-gray-300 text-sm font-medium hover:text-white hover:bg-white/5 transition-all duration-200 border border-white/10 hover:border-white/20"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+              </svg>
+              LinkedIn
+            </a>
+          </div>
 
-        {/* Grid View Overlay - When grid mode is selected */}
-        {viewMode === 'grid' && introComplete && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-40 bg-black/95 overflow-auto pt-32 pb-8 px-8"
-          >
-            <ProjectList
-              projects={filteredProjects}
-              onProjectClick={setSelectedProject}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              isAdmin={isAdmin}
-            />
-          </motion.div>
-        )}
-      </div>
+          {/* Location */}
+          <p className="text-gray-500 text-xs">
+            Brooklyn, NY · Remote Available
+          </p>
+        </motion.div>
+      </section>
 
       {/* Project Detail Modal */}
       {selectedProject && (
         <ProjectDetail
           project={selectedProject}
           onClose={() => setSelectedProject(null)}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          deleting={deleting}
         />
       )}
     </IntroAnimation>

@@ -51,7 +51,7 @@ export default function About() {
                 >
                     <div className="w-32 h-32 mx-auto mb-6 rounded-full p-1 bg-gradient-to-br from-amber-400 via-yellow-400 to-orange-500 shadow-lg shadow-amber-500/40">
                         <img
-                            src="/assets/profile-photo.jpg"
+                            src="/assets/profile-photo.webp"
                             alt="Samuel McFarlane"
                             className="w-full h-full rounded-full object-cover"
                         />
