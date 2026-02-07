@@ -121,9 +121,9 @@ export default function Portfolio() {
       </div>
 
       {/* Hire Me Section - Clean & Concise */}
-      <section className="relative bg-black py-20 px-6">
+      <section className="relative bg-slate-950 py-20 px-6">
         {/* Ambient glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/[0.03] rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/[0.08] rounded-full blur-3xl pointer-events-none" />
 
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -136,7 +136,7 @@ export default function Portfolio() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
             Let's Build Something Great
           </h2>
-          <p className="text-gray-400 mb-8 text-base">
+          <p className="text-gray-300 mb-8 text-base">
             Available for full-time roles, contract work, and collaborations.
           </p>
 

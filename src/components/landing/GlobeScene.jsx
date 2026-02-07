@@ -436,7 +436,7 @@ function ParticleGlobe({ mousePosition, introComplete, animationProgress }) {
         if (wireframeRef.current) {
             wireframeRef.current.rotation.y += delta * 0.05;
             // Fade in wireframe as globe forms
-            wireframeRef.current.material.opacity = Math.min(formationProgress * 0.15, 0.12);
+            wireframeRef.current.material.opacity = Math.min(formationProgress * 0.25, 0.2);
             wireframeRef.current.scale.setScalar(formationProgress * 2 || 0.01);
 
             if (introComplete && mousePosition) {
@@ -456,8 +456,8 @@ function ParticleGlobe({ mousePosition, introComplete, animationProgress }) {
     });
 
     // Particle opacity based on animation phase
-    const particleOpacity = animationProgress < atomEnd ? 0.4 :
-        Math.min(0.4 + (animationProgress - atomEnd) * 1.5, 0.9);
+    const particleOpacity = animationProgress < atomEnd ? 0.6 :
+        Math.min(0.6 + (animationProgress - atomEnd) * 1.2, 1.0);
 
     return (
         <group>
@@ -612,9 +612,9 @@ function Scene({ mousePosition, introComplete, setIntroComplete }) {
                 introComplete={introComplete}
                 setIntroComplete={setIntroComplete}
             />
-            <ambientLight intensity={0.2} color="#fff8e0" />
-            <pointLight position={[10, 10, 10]} intensity={0.3} color="#ffd700" />
-            <pointLight position={[-10, -10, -10]} intensity={0.15} color="#c9a227" />
+            <ambientLight intensity={0.5} color="#fff8e0" />
+            <pointLight position={[10, 10, 10]} intensity={0.6} color="#ffd700" />
+            <pointLight position={[-10, -10, -10]} intensity={0.3} color="#c9a227" />
 
             {/* Atom components (visible during atom & burst phases) */}
             {nucleusOpacity > 0 && (
@@ -672,7 +672,7 @@ export default function GlobeScene({ onIntroComplete }) {
             ref={containerRef}
             className="absolute inset-0 z-0"
             style={{
-                background: 'radial-gradient(ellipse at 50% 30%, #100d08 0%, #0a0806 50%, #040302 100%)'
+                background: 'radial-gradient(ellipse at 50% 30%, #1a1510 0%, #0f0d0a 50%, #060504 100%)'
             }}
         >
             <Canvas
@@ -717,7 +717,7 @@ export default function GlobeScene({ onIntroComplete }) {
             <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
-                    background: 'radial-gradient(circle at 50% 35%, rgba(255, 215, 0, 0.12) 0%, transparent 50%)'
+                    background: 'radial-gradient(circle at 50% 35%, rgba(255, 215, 0, 0.20) 0%, transparent 55%)'
                 }}
             />
         </div>

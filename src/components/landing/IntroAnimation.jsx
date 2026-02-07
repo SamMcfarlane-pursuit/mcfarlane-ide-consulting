@@ -72,7 +72,7 @@ export function HeroText({ title, subtitle, tagline, profileImage, onViewProject
                     duration: 1,
                     ease: 'easeOut'
                 }}
-                className="text-lg md:text-xl lg:text-2xl text-gray-300 font-light max-w-3xl mx-auto leading-relaxed"
+                className="text-lg md:text-xl lg:text-2xl text-gray-200 font-light max-w-3xl mx-auto leading-relaxed"
             >
                 {subtitle}
             </motion.p>
@@ -83,7 +83,7 @@ export function HeroText({ title, subtitle, tagline, profileImage, onViewProject
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: profileImage ? 3.4 : 3.2, duration: 0.8 }}
-                    className="text-sm text-amber-400/70 tracking-widest uppercase font-medium"
+                    className="text-sm text-amber-400/90 tracking-widest uppercase font-medium"
                 >
                     {tagline}
                 </motion.p>
@@ -201,7 +201,7 @@ export function CinematicOverlay() {
             <div
                 className="fixed inset-0 pointer-events-none z-40"
                 style={{
-                    background: 'radial-gradient(ellipse at center, transparent 40%, rgba(10,8,6,0.5) 80%, rgba(8,6,4,0.7) 100%)'
+                    background: 'radial-gradient(ellipse at center, transparent 50%, rgba(10,8,6,0.3) 80%, rgba(8,6,4,0.45) 100%)'
                 }}
             />
         </>
