@@ -121,9 +121,9 @@ export default function Portfolio() {
       </div>
 
       {/* Hire Me Section - Clean & Concise */}
-      <section className="relative bg-slate-950 py-20 px-6">
+      <section className="relative bg-gray-900 py-20 px-6">
         {/* Ambient glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/[0.08] rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/[0.14] rounded-full blur-3xl pointer-events-none" />
 
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -188,7 +188,7 @@ export default function Portfolio() {
           </div>
 
           {/* Location */}
-          <p className="text-gray-500 text-xs">
+          <p className="text-gray-400 text-xs">
             Brooklyn, NY · Remote Available
           </p>
         </motion.div>

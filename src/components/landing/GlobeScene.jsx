@@ -550,7 +550,7 @@ function FloatingParticles({ animationProgress }) {
     });
 
     // Fade in ambient particles during globe phase
-    const opacity = Math.min(animationProgress * 0.5, 0.3);
+    const opacity = Math.min(animationProgress * 0.6, 0.45);
 
     return (
         <points ref={pointsRef}>
@@ -564,7 +564,7 @@ function FloatingParticles({ animationProgress }) {
             </bufferGeometry>
             <pointsMaterial
                 size={0.02}
-                color="#3a6090"
+                color="#c9a050"
                 transparent
                 opacity={opacity}
                 sizeAttenuation
@@ -672,7 +672,7 @@ export default function GlobeScene({ onIntroComplete }) {
             ref={containerRef}
             className="absolute inset-0 z-0"
             style={{
-                background: 'radial-gradient(ellipse at 50% 30%, #1a1510 0%, #0f0d0a 50%, #060504 100%)'
+                background: 'radial-gradient(ellipse at 50% 30%, #1f1a12 0%, #121010 50%, #080706 100%)'
             }}
         >
             <Canvas
@@ -688,7 +688,7 @@ export default function GlobeScene({ onIntroComplete }) {
                 }}
                 onCreated={({ gl }) => {
                     gl.toneMapping = THREE.ACESFilmicToneMapping;
-                    gl.toneMappingExposure = 1.2;
+                    gl.toneMappingExposure = 1.5;
                     gl.outputColorSpace = THREE.SRGBColorSpace;
                 }}
             >

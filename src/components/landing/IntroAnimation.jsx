@@ -162,11 +162,11 @@ export function ScrollIndicator() {
                 }}
                 className="flex flex-col items-center gap-3"
             >
-                <span className="text-xs text-gray-500 uppercase tracking-[0.2em] font-light">
+                <span className="text-xs text-gray-400 uppercase tracking-[0.2em] font-light">
                     Scroll to explore
                 </span>
                 <motion.svg
-                    className="w-6 h-6 text-gray-500"
+                    className="w-6 h-6 text-gray-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -201,7 +201,7 @@ export function CinematicOverlay() {
             <div
                 className="fixed inset-0 pointer-events-none z-40"
                 style={{
-                    background: 'radial-gradient(ellipse at center, transparent 50%, rgba(10,8,6,0.3) 80%, rgba(8,6,4,0.45) 100%)'
+                    background: 'radial-gradient(ellipse at center, transparent 55%, rgba(10,8,6,0.20) 80%, rgba(8,6,4,0.30) 100%)'
                 }}
             />
         </>

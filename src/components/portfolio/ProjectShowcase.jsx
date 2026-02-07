@@ -85,7 +85,7 @@ function CinematicCard({ project, index }) {
             />
 
             {/* Main card */}
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-800/90 via-gray-850/85 to-gray-900/90 border border-gray-700/60 backdrop-blur-xl shadow-2xl shadow-black/40">
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-700/80 via-gray-800/75 to-gray-800/85 border border-gray-600/50 backdrop-blur-xl shadow-2xl shadow-black/30">
 
                 {/* Image container with cinematic aspect ratio */}
                 <div className="relative aspect-[16/9] overflow-hidden">
@@ -111,7 +111,7 @@ function CinematicCard({ project, index }) {
                     )}
 
                     {/* Cinematic gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 via-gray-900/10 to-transparent" />
                     <div className="absolute inset-0 bg-gradient-to-r from-gray-900/30 via-transparent to-gray-900/30" />
 
 
@@ -285,15 +285,15 @@ export default function ProjectShowcase({ projects }) {
     const regularProjects = filteredProjects.filter(p => !p.featured);
 
     return (
-        <section className="relative min-h-screen bg-black overflow-hidden">
+        <section className="relative min-h-screen bg-gray-950 overflow-hidden">
             {/* Cinematic background */}
             <div className="absolute inset-0">
                 {/* Gradient base */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-950/95 to-black" />
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-950 via-gray-900/90 to-gray-950" />
 
                 {/* Ambient light orbs */}
-                <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[150px] animate-pulse" />
-                <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-[120px]" />
+                <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-amber-500/[0.18] rounded-full blur-[150px] animate-pulse" />
+                <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-orange-500/[0.15] rounded-full blur-[120px]" />
 
                 {/* Noise texture overlay */}
                 <div className="absolute inset-0 opacity-[0.015]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")' }} />
@@ -335,7 +335,7 @@ export default function ProjectShowcase({ projects }) {
                     </h2>
 
                     {/* Subtitle */}
-                    <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
                         Explore a curated collection of AI platforms, web applications, and data visualization systems
                     </p>
                 </motion.div>
