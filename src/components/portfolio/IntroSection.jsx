@@ -12,16 +12,16 @@ export default function IntroSection() {
     >
       <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
         <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 bg-clip-text text-transparent animate-pulse">
-          Samuel McFarlane
+          McFarlane IDE Consulting
         </span>
       </h1>
-      
+
       <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
         Dynamic Project Universe
       </h2>
-      
+
       <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
-        Orbiting ecosystem for connected solutions
+        Intelligent software solutions & consulting
       </p>
 
       <motion.div

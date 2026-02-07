@@ -30,12 +30,12 @@ export default function Layout({ children }) {
               <div className="relative">
                 <div className="absolute inset-0 rounded-lg bg-amber-400/40 blur-md group-hover:blur-lg transition-all" />
                 <div className="relative w-9 h-9 rounded-lg bg-gradient-to-br from-amber-400 via-yellow-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/25">
-                  <span className="text-slate-900 font-bold text-sm">SM</span>
+                  <span className="text-slate-900 font-bold text-xs">MIC</span>
                 </div>
               </div>
               <div className="flex flex-col">
-                <span className="font-semibold text-white group-hover:text-amber-300 transition-colors">Samuel McFarlane</span>
-                <span className="text-amber-400/60 text-xs hidden sm:inline tracking-wide">AI/ML Engineer & Full-Stack Dev</span>
+                <span className="font-semibold text-white group-hover:text-amber-300 transition-colors">McFarlane IDE Consulting</span>
+                <span className="text-amber-400/60 text-xs hidden sm:inline tracking-wide">Software Consulting & Development</span>
               </div>
             </Link>
 

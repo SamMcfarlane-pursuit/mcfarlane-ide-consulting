@@ -40,11 +40,11 @@ export default function Footer() {
                     <div className="space-y-4">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 via-yellow-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/25">
-                                <span className="text-slate-900 font-bold text-sm">SM</span>
+                                <span className="text-slate-900 font-bold text-xs">MIC</span>
                             </div>
                             <div>
-                                <h3 className="text-white font-semibold">Samuel McFarlane</h3>
-                                <p className="text-amber-400/60 text-xs">AI/ML Engineer & Full-Stack Dev</p>
+                                <h3 className="text-white font-semibold">McFarlane IDE Consulting</h3>
+                                <p className="text-amber-400/60 text-xs">Software Consulting & Development</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-2 text-gray-400 text-sm">
@@ -96,7 +96,7 @@ export default function Footer() {
                 <div className="border-t border-amber-500/10 pt-6">
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                         <p className="text-gray-500 text-xs">
-                            © {currentYear} Samuel McFarlane. Built with React & Three.js
+                            © {currentYear} McFarlane IDE Consulting. Built with React & Three.js
                         </p>
                         <p className="text-gray-500 text-xs flex items-center gap-1">
                             Made with <Heart className="w-3 h-3 text-amber-400/60" /> in Brooklyn

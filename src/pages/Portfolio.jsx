@@ -81,9 +81,9 @@ export default function Portfolio() {
           transition={{ duration: 1.2 }}
         >
           <HeroText
-            title="Samuel McFarlane"
-            subtitle="AI/ML Engineer & Full-Stack Developer building intelligent systems from first principles — from Rust backends to custom LLMs"
-            tagline="Brooklyn-based • Pursuit AI Native Program"
+            title="McFarlane IDE Consulting"
+            subtitle="Software consulting & development — AI/ML engineering, full-stack systems, and intelligent solutions built from first principles"
+            tagline="Brooklyn-based • Samuel McFarlane, Founder"
             profileImage="/assets/profile-photo.webp"
             onViewProjects={handleViewProjects}
           />
