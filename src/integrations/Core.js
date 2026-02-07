@@ -1,4 +1,4 @@
-// Standalone integrations (Base44-free)
+// Standalone integrations
 
 /**
  * Stub for InvokeLLM - returns placeholder analysis

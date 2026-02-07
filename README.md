@@ -1,39 +1,37 @@
-**Welcome to your Base44 project** 
+# McFarlane IDE Consulting
 
-**About**
+Interactive 3D portfolio website featuring a dynamic globe visualization, Three.js animations, and an amber/gold design theme. Built as a showcase of modern React development techniques.
 
-View and Edit  your app on [Base44.com](http://Base44.com) 
+## Tech Stack
 
-This project contains everything you need to run your app locally.
+- **React** + **Vite** — Fast, modern frontend tooling
+- **Three.js** / **React Three Fiber** — 3D globe and particle effects
+- **Framer Motion** — Smooth page transitions and animations
+- **TailwindCSS** — Utility-first styling
+- **Vercel** — Production deployment
 
-**Edit the code in your local development environment**
+## Getting Started
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+```bash
+# Clone the repository
+git clone https://github.com/SamMcfarlane-pursuit/mcfarlane-ide-consulting.git
 
-**Prerequisites:** 
+# Navigate to the project directory
+cd mcfarlane-ide-consulting
 
-1. Clone the repository using the project's Git URL 
-2. Navigate to the project directory
-3. Install dependencies: `npm install`
-4. Create an `.env.local` file and set the right environment variables
+# Install dependencies
+npm install
 
+# Run the development server
+npm run dev
 ```
-VITE_BASE44_APP_ID=your_app_id
-VITE_BASE44_APP_BASE_URL=your_backend_url
 
-e.g.
-VITE_BASE44_APP_ID=cbef744a8545c389ef439ea6
-VITE_BASE44_APP_BASE_URL=https://my-to-do-list-81bfaad7.base44.app
-```
+## Deployment
 
-Run the app: `npm run dev`
+This project is deployed on [Vercel](https://mcfarlane-ide-consulting.vercel.app).
 
-**Publish your changes**
+Push to `main` to trigger an automatic production deployment.
 
-Open [Base44.com](http://Base44.com) and click on Publish.
+## License
 
-**Docs & Support**
-
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
-
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+© 2026 McFarlane IDE Consulting. All rights reserved.

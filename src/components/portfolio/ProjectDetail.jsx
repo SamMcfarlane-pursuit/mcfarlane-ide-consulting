@@ -43,7 +43,7 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
     planning: 'Planning'
   };
 
-  const isBase44App = project.demo_url?.includes('base44.app') || project.demo_url?.includes('base44.com');
+
 
   const handleDeleteConfirm = async () => {
     await onDelete(project.id);
@@ -80,12 +80,7 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
                       {statusIcons[project.status]}
                       {statusLabels[project.status]}
                     </Badge>
-                    {isBase44App && (
-                      <Badge className="bg-cyan-500/10 text-cyan-300 border-cyan-500/30 flex items-center gap-1">
-                        <Sparkles className="w-3 h-3" />
-                        base44 App
-                      </Badge>
-                    )}
+
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-400 flex-wrap">
                     <div className="flex items-center gap-1">
@@ -193,10 +188,7 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
                             key={index}
                             variant="outline"
                             className={
-                              tech.toLowerCase() === 'base44'
-                                ? "bg-amber-500/20 text-amber-300 border-amber-500/50"
-                                : "bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20 transition-colors"
-                            }
+                              "bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20 transition-colors"}
                           >
                             {tech}
                           </Badge>
@@ -287,17 +279,10 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
                     className="flex-1 min-w-[200px]"
                   >
                     <Button className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-900 font-semibold shadow-lg shadow-amber-500/25">
-                      {isBase44App ? (
-                        <>
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          Open base44 App
-                        </>
-                      ) : (
-                        <>
-                          <Monitor className="w-4 h-4 mr-2" />
-                          Live Demo
-                        </>
-                      )}
+                      <>
+                        <Monitor className="w-4 h-4 mr-2" />
+                        Live Demo
+                      </>
                     </Button>
                   </a>
                 )}

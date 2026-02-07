@@ -75,7 +75,7 @@ export default function ProjectList({ projects, onProjectClick, onEdit, onDelete
       animate="visible"
     >
       {projects.map((project, index) => {
-        const isBase44App = project.demo_url?.includes('base44.app') || project.demo_url?.includes('base44.com');
+
         const isHovered = hoveredProject === project.id;
         const hasVideo = project.preview_video;
 
@@ -156,12 +156,7 @@ export default function ProjectList({ projects, onProjectClick, onEdit, onDelete
                         {statusIcons[project.status]}
                         {statusLabels[project.status]}
                       </Badge>
-                      {isBase44App && (
-                        <Badge className="bg-cyan-500/10 text-cyan-300 border-cyan-500/30 flex items-center gap-1 text-xs backdrop-blur-sm">
-                          <Sparkles className="w-3 h-3" />
-                          base44
-                        </Badge>
-                      )}
+
                     </div>
                   </div>
                 </div>

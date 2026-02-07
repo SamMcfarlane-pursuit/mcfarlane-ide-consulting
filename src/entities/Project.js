@@ -1,4 +1,4 @@
-// LocalStorage-based Project entity (Base44-free)
+// LocalStorage-based Project entity
 const STORAGE_KEY = 'mcfarlane_projects';
 
 const getProjects = () => {
