@@ -1,5 +1,5 @@
 // LocalStorage-based Project entity (Base44-free)
-const STORAGE_KEY = 'novasphere_projects';
+const STORAGE_KEY = 'mcfarlane_projects';
 
 const getProjects = () => {
     try {

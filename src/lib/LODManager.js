@@ -58,7 +58,7 @@ export const QUALITY_PRESETS = {
 };
 
 // Storage key for user preference
-const LOD_STORAGE_KEY = 'novasphere_quality_preset';
+const LOD_STORAGE_KEY = 'mcfarlane_quality_preset';
 
 /**
  * Detect GPU tier based on WebGL capabilities

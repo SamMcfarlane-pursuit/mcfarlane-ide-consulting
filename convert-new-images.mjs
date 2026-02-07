@@ -8,7 +8,7 @@ const targetDir = './public/assets/projects';
 const log = [];
 
 const mappings = [
-    ['novasphere_project_1770255342176.png', 'novasphere.webp'],
+    ['novasphere_project_1770255342176.png', 'mcfarlane-ide.webp'],
     ['auction_intel_project_1770255355639.png', 'auction-intel.webp'],
     ['petal_prose_project_1770255373068.png', 'petal-prose.webp'],
     ['hvac_hub_project_1770255389187.png', 'hvac-hub.webp'],

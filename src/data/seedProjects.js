@@ -5,12 +5,12 @@ import { Project } from '@/entities/Project';
 
 export const githubProjects = [
     {
-        title: 'NovaSphere Portfolio',
+        title: 'McFarlane IDE Consulting',
         description: 'Interactive 3D portfolio website featuring a dynamic globe visualization, Three.js animations, and an amber/gold design theme. Built as a showcase of modern React development techniques.',
         technologies: ['React', 'Three.js', 'Framer Motion', 'JavaScript', 'Vite', 'TailwindCSS'],
-        github_url: 'https://github.com/SamMcfarlane-pursuit/novasphere-portfolio',
+        github_url: 'https://github.com/SamMcfarlane-pursuit/mcfarlane-ide-consulting',
         live_url: null,
-        image: '/assets/projects/novasphere.webp',
+        image: '/assets/projects/mcfarlane-ide.webp',
         status: 'in_progress',
         year: 2026,
         featured: true,
@@ -143,7 +143,7 @@ export const githubProjects = [
  * Call this function to populate localStorage with projects
  */
 export async function seedProjects() {
-    const SEED_FLAG = 'novasphere_projects_seeded';
+    const SEED_FLAG = 'mcfarlane_projects_seeded';
 
     // Check if already seeded
     if (localStorage.getItem(SEED_FLAG)) {
@@ -172,8 +172,8 @@ export async function seedProjects() {
  * Force re-seeds projects (clears existing and re-adds)
  */
 export async function forceSeedProjects() {
-    localStorage.removeItem('novasphere_projects_seeded');
-    localStorage.removeItem('novasphere_projects');
+    localStorage.removeItem('mcfarlane_projects_seeded');
+    localStorage.removeItem('mcfarlane_projects');
     return seedProjects();
 }
 
