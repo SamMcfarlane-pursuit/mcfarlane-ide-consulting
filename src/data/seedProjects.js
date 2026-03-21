@@ -5,6 +5,30 @@ import { Project } from '@/entities/Project';
 
 export const githubProjects = [
     {
+        title: 'LeadFlow CRM',
+        description: 'Shipped full-stack CRM with Kanban pipeline, AI-generated email/SMS outreach, call scripts, lead scoring, and Google Sheets sync.',
+        technologies: ['TypeScript', 'React', 'Node.js', 'Gemini AI'],
+        github_url: 'https://github.com/SamMcfarlane-pursuit',
+        live_url: null,
+        image: '/assets/projects/mcfarlane-ide.webp',
+        status: 'completed',
+        year: 2025,
+        featured: true,
+        category: 'ai'
+    },
+    {
+        title: 'Crypto Pulse AI',
+        description: 'Engineered AI-powered cryptocurrency market intelligence platform with real-time analytics and predictive insights.',
+        technologies: ['TypeScript', 'Base44', 'AI/ML', 'Real-Time Data'],
+        github_url: 'https://github.com/SamMcfarlane-pursuit/Crypto-Pulse-AI',
+        live_url: null,
+        image: '/assets/projects/ballistic.webp',
+        status: 'completed',
+        year: 2025,
+        featured: true,
+        category: 'dataviz'
+    },
+    {
         title: 'McFarlane IDE Consulting',
         description: 'Interactive 3D portfolio website featuring a dynamic globe visualization, Three.js animations, and an amber/gold design theme. Built as a showcase of modern React development techniques.',
         technologies: ['React', 'Three.js', 'Framer Motion', 'JavaScript', 'Vite', 'TailwindCSS'],
@@ -18,8 +42,8 @@ export const githubProjects = [
     },
     {
         title: 'Auction Intel',
-        description: 'Advanced Tax Lien Analytics Platform featuring a US State Grid Map, intelligent tier detection, and county-level market intelligence for investment decision-making.',
-        technologies: ['React', 'TypeScript', 'Node.js', 'Data Visualization', 'Vercel'],
+        description: 'Built Rust-backed property investment platform: US state grid map, automated tier detection, county-level market intelligence.',
+        technologies: ['Rust Backend', 'TypeScript', 'Data Visualization'],
         github_url: 'https://github.com/SamMcfarlane-pursuit/auction-intel',
         live_url: 'https://auction-intel.vercel.app',
         image: '/assets/projects/auction-intel.webp',
@@ -42,8 +66,8 @@ export const githubProjects = [
     },
     {
         title: 'HVAC Hub',
-        description: 'Central management hub for HVAC job scheduling, tracking, and operations. Features real-time updates and comprehensive job management capabilities.',
-        technologies: ['TypeScript', 'React', 'Vercel', 'Node.js'],
+        description: 'Architected HVAC operating system: AI-powered job triage, NYC-optimized routing, graph database for parts compatibility.',
+        technologies: ['TypeScript', 'React Native', 'Node.js', 'Neo4j'],
         github_url: 'https://github.com/SamMcfarlane-pursuit/HVAC-Hub-',
         live_url: 'https://hvac-hub-sams-projects-a99fd918.vercel.app',
         image: '/assets/projects/hvac-hub.webp',
