@@ -47,7 +47,7 @@ export const githubProjects = [
         github_url: 'https://github.com/SamMcfarlane-pursuit/auction-intel',
         live_url: 'https://auction-intel.vercel.app',
         image: '/assets/projects/auction-intel.webp',
-        status: 'completed',
+        status: 'in_progress',
         year: 2025,
         featured: true,
         category: 'dataviz'
