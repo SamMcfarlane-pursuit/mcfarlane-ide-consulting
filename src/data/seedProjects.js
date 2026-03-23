@@ -11,7 +11,7 @@ export const githubProjects = [
         github_url: 'https://github.com/SamMcfarlane-pursuit',
         live_url: null,
         image: '/assets/projects/mcfarlane-ide.webp',
-        status: 'completed',
+        status: 'in_progress',
         year: 2025,
         featured: true,
         category: 'ai'
