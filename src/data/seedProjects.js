@@ -23,7 +23,7 @@ export const githubProjects = [
         github_url: 'https://github.com/SamMcfarlane-pursuit/Crypto-Pulse-AI',
         live_url: null,
         image: '/assets/projects/ballistic.webp',
-        status: 'completed',
+        status: 'in_progress',
         year: 2025,
         featured: true,
         category: 'dataviz'
