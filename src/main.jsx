@@ -2,7 +2,11 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from '@/App.jsx'
 import '@/index.css'
+import { initializeProjects } from '@/data/seedProjects';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <App />
-)
+// Initialize project data on startup
+initializeProjects().then(() => {
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    <App />
+  );
+});

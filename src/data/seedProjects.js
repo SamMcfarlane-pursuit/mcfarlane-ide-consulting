@@ -163,22 +163,15 @@ export const githubProjects = [
 ];
 
 /**
- * Seeds the portfolio with GitHub project data
- * Call this function to populate localStorage with projects
+ * Seeds the portfolio with GitHub project data.
+ * This function is intended to be called by `initializeProjects`.
  */
 export async function seedProjects() {
-    const SEED_FLAG = 'mcfarlane_projects_seeded';
-
-    // Check if already seeded
-    if (localStorage.getItem(SEED_FLAG)) {
-        console.log('Projects already seeded');
-        return false;
-    }
-
     console.log('Seeding projects from GitHub data...');
 
     for (const projectData of githubProjects) {
         try {
+            // Use Project.create to ensure IDs and timestamps are added
             await Project.create(projectData);
             console.log(`✓ Created: ${projectData.title}`);
         } catch (error) {
@@ -187,7 +180,7 @@ export async function seedProjects() {
     }
 
     // Mark as seeded
-    localStorage.setItem(SEED_FLAG, 'true');
+    localStorage.setItem('mcfarlane_projects_seeded', 'true');
     console.log('✓ Project seeding complete!');
     return true;
 }
@@ -196,9 +189,31 @@ export async function seedProjects() {
  * Force re-seeds projects (clears existing and re-adds)
  */
 export async function forceSeedProjects() {
+    console.log('Forcing re-seed of projects...');
     localStorage.removeItem('mcfarlane_projects_seeded');
     localStorage.removeItem('mcfarlane_projects');
     return seedProjects();
 }
 
-export default { githubProjects, seedProjects, forceSeedProjects };
+/**
+ * Initializes the project data based on the environment.
+ * In DEV, it always re-seeds. In PROD, it seeds only once.
+ */
+export async function initializeProjects() {
+    const SEED_FLAG = 'mcfarlane_projects_seeded';
+
+    // In development, always re-seed for fresh data
+    if (import.meta.env.DEV) {
+        await forceSeedProjects();
+        return;
+    }
+
+    // In production, only seed once
+    if (!localStorage.getItem(SEED_FLAG)) {
+        await seedProjects();
+    } else {
+        console.log('Projects already seeded.');
+    }
+}
+
+export default { githubProjects, seedProjects, forceSeedProjects, initializeProjects };
