@@ -5,6 +5,18 @@ import { Project } from '@/entities/Project';
 
 export const githubProjects = [
     {
+        title: 'AI-ML Learning Platform',
+        description: 'Hands-on AI/ML learning platform powered by the Gemini API. Built to experiment with machine learning concepts, model integration, and prompt engineering workflows — deployed via Google AI Studio.',
+        technologies: ['TypeScript', 'Gemini AI', 'React', 'Vite', 'Node.js'],
+        github_url: 'https://github.com/SamMcfarlane-pursuit/AI-ML-Learning-',
+        live_url: 'https://ai.studio/apps/83f86445-ca55-46b2-b947-9a0614580564',
+        image: '/assets/projects/kpi-copilot.webp',
+        status: 'in_progress',
+        year: 2026,
+        featured: true,
+        category: 'ai'
+    },
+    {
         title: 'LeadFlow CRM',
         description: 'Shipped full-stack CRM with Kanban pipeline, AI-generated email/SMS outreach, call scripts, lead scoring, and Google Sheets sync.',
         technologies: ['TypeScript', 'React', 'Node.js', 'Gemini AI'],
