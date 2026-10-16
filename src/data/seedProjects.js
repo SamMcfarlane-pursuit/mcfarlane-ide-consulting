@@ -5,6 +5,18 @@ import { Project } from '@/entities/Project';
 
 export const githubProjects = [
     {
+        title: 'MusterCommand FSD Console',
+        description: 'Commercial high-rise emergency evacuation & accountability command console built for Con Edison Floor 07. Features real-time occupant muster logging, SHA-256 cryptographic audit ledger, architectural CAD floor tracking, and Gemini AI emergency copilot.',
+        technologies: ['TypeScript', 'React', 'Gemini AI', 'Node.js', 'PostgreSQL', 'Express', 'TailwindCSS'],
+        github_url: 'https://github.com/SamMcfarlane-pursuit/fsd-remix-console',
+        live_url: 'https://fsd-remix-console.onrender.com',
+        image: '/assets/projects/mustercommand.webp',
+        status: 'completed',
+        year: 2026,
+        featured: true,
+        category: 'web'
+    },
+    {
         title: 'AI-ML Learning Platform',
         description: 'Hands-on AI/ML learning platform powered by the Gemini API. Built to experiment with machine learning concepts, model integration, and prompt engineering workflows — deployed via Google AI Studio.',
         technologies: ['TypeScript', 'Gemini AI', 'React', 'Vite', 'Node.js'],
@@ -30,13 +42,13 @@ export const githubProjects = [
     },
     {
         title: 'Crypto Pulse AI',
-        description: 'Engineered AI-powered cryptocurrency market intelligence platform with real-time analytics and predictive insights.',
-        technologies: ['TypeScript', 'Base44', 'AI/ML', 'Real-Time Data'],
-        github_url: 'https://github.com/SamMcfarlane-pursuit/Crypto-Pulse-AI',
+        description: 'AI-powered cryptocurrency market intelligence platform featuring real-time price analytics, predictive market signals, order-book depth tracking, and sentiment indicators.',
+        technologies: ['TypeScript', 'React', 'Base44', 'AI/ML', 'Real-Time Data', 'Vite', 'TailwindCSS'],
+        github_url: 'https://github.com/SamMcfarlane-pursuit/cryptopulse-ai-copy',
         live_url: null,
-        image: '/assets/projects/ballistic.webp',
-        status: 'in_progress',
-        year: 2025,
+        image: '/assets/projects/cryptopulse.webp',
+        status: 'completed',
+        year: 2026,
         featured: true,
         category: 'dataviz'
     },
@@ -177,17 +189,28 @@ export const githubProjects = [
 /**
  * Seeds the portfolio with GitHub project data.
  * This function is intended to be called by `initializeProjects`.
+ * Smartly inserts new projects and updates existing ones to prevent duplicates.
  */
 export async function seedProjects() {
     console.log('Seeding projects from GitHub data...');
 
+    const existing = await Project.list('', 1000);
+    const existingMap = new Map(existing.map(p => [p.title.toLowerCase().trim(), p]));
+
     for (const projectData of githubProjects) {
         try {
-            // Use Project.create to ensure IDs and timestamps are added
-            await Project.create(projectData);
-            console.log(`✓ Created: ${projectData.title}`);
+            const key = projectData.title.toLowerCase().trim();
+            const existingProj = existingMap.get(key);
+            if (existingProj) {
+                // Update with newest definition while retaining internal id
+                await Project.update(existingProj.id, projectData);
+                console.log(`✓ Updated: ${projectData.title}`);
+            } else {
+                await Project.create(projectData);
+                console.log(`✓ Created: ${projectData.title}`);
+            }
         } catch (error) {
-            console.error(`✗ Failed to create ${projectData.title}:`, error);
+            console.error(`✗ Failed to seed ${projectData.title}:`, error);
         }
     }
 
