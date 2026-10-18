@@ -645,6 +645,7 @@ export default function GlobeScene({ onIntroComplete }) {
     const containerRef = useRef(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [introComplete, setIntroComplete] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
         if (introComplete && onIntroComplete) {
@@ -652,9 +653,27 @@ export default function GlobeScene({ onIntroComplete }) {
         }
     }, [introComplete, onIntroComplete]);
 
+    // Pause WebGL rendering loop when hero is scrolled out of viewport
     useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsVisible(entry.isIntersecting);
+            },
+            { threshold: 0.05 }
+        );
+
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (!isVisible || !introComplete) return;
+
         const handleMouseMove = (e) => {
-            if (containerRef.current && introComplete) {
+            if (containerRef.current) {
                 const rect = containerRef.current.getBoundingClientRect();
                 setMousePosition({
                     x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
@@ -663,9 +682,9 @@ export default function GlobeScene({ onIntroComplete }) {
             }
         };
 
-        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
         return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, [introComplete]);
+    }, [introComplete, isVisible]);
 
     return (
         <div
@@ -676,9 +695,10 @@ export default function GlobeScene({ onIntroComplete }) {
             }}
         >
             <Canvas
+                frameloop={isVisible ? "always" : "never"}
                 camera={{ position: [0, 0, 3], fov: 50 }}
                 style={{ width: '100%', height: '100%' }}
-                dpr={Math.min(window.devicePixelRatio, 3)} // Support up to 4K displays
+                dpr={Math.min(window.devicePixelRatio, 1.5)} // Smooth high-DPI rendering without GPU overload
                 gl={{
                     antialias: true,
                     alpha: false,
