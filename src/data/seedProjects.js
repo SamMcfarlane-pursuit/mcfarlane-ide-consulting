@@ -69,9 +69,9 @@ export const githubProjects = [
         description: 'Interactive 3D portfolio website featuring a dynamic globe visualization, Three.js animations, and an amber/gold design theme. Built as a showcase of modern React development techniques.',
         technologies: ['React', 'Three.js', 'Framer Motion', 'JavaScript', 'Vite', 'TailwindCSS'],
         github_url: 'https://github.com/SamMcfarlane-pursuit/mcfarlane-ide-consulting',
-        live_url: null,
+        live_url: 'https://mcfarlane-ide-consulting.netlify.app',
         image: '/assets/projects/mcfarlane-ide.webp',
-        status: 'in_progress',
+        status: 'completed',
         year: 2026,
         featured: true,
         category: 'web'
@@ -81,9 +81,9 @@ export const githubProjects = [
         description: 'Built Rust-backed property investment platform: US state grid map, automated tier detection, county-level market intelligence.',
         technologies: ['Rust Backend', 'TypeScript', 'Data Visualization'],
         github_url: 'https://github.com/SamMcfarlane-pursuit/auction-intel',
-        live_url: 'https://auction-intel.vercel.app',
+        live_url: 'https://sam-auction-intel.netlify.app',
         image: '/assets/projects/auction-intel.webp',
-        status: 'in_progress',
+        status: 'completed',
         year: 2025,
         featured: true,
         category: 'dataviz'
