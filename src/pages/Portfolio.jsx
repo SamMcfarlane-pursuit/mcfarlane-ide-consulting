@@ -32,7 +32,7 @@ export default function Portfolio() {
     setLoading(true);
     try {
       await seedProjects();
-      const data = await Project.list('-year', 1000);
+      const data = await Project.list('', 1000);
       setProjects(data);
     } catch (error) {
       console.error('Error loading projects:', error);

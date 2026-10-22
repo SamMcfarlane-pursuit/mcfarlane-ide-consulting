@@ -271,42 +271,27 @@ export default function ProjectDetail({ project, onClose, onEdit, onDelete, dele
 
               {/* Links */}
               <div className="flex flex-wrap gap-3 pt-4 border-t border-slate-700/50">
-                {project.demo_url && (
+                {(project.live_url || project.demo_url || project.link) && (
                   <a
-                    href={project.demo_url}
+                    href={project.live_url || project.demo_url || project.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 min-w-[200px]"
                   >
                     <Button className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-900 font-semibold shadow-lg shadow-amber-500/25">
-                      <>
-                        <Monitor className="w-4 h-4 mr-2" />
-                        Live Demo
-                      </>
+                      <Monitor className="w-4 h-4 mr-2" />
+                      View Live Project
                     </Button>
                   </a>
                 )}
-                {project.link && !project.demo_url && (
+                {(project.github_url || project.github) && (
                   <a
-                    href={project.link}
+                    href={project.github_url || project.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 min-w-[200px]"
                   >
-                    <Button className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-900 font-semibold shadow-lg shadow-amber-500/25">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      View Project
-                    </Button>
-                  </a>
-                )}
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 min-w-[200px]"
-                  >
-                    <Button variant="outline" className="w-full border-slate-600 hover:bg-slate-800">
+                    <Button variant="outline" className="w-full border-slate-600 hover:bg-slate-800 text-white">
                       <Github className="w-4 h-4 mr-2" />
                       View on GitHub
                     </Button>

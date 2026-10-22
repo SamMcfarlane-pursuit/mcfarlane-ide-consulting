@@ -17,6 +17,30 @@ export const githubProjects = [
         category: 'web'
     },
     {
+        title: 'HVAC Hub',
+        description: 'Architected HVAC operating system: AI-powered job triage, NYC-optimized routing, and graph database for parts compatibility. Deployed on Netlify.',
+        technologies: ['TypeScript', 'React Native', 'Node.js', 'Neo4j', 'Netlify'],
+        github_url: 'https://github.com/SamMcfarlane-pursuit/HVAC-Hub-',
+        live_url: 'https://sam-hvac-hub.netlify.app',
+        image: '/assets/projects/hvac-hub.webp',
+        status: 'completed',
+        year: 2026,
+        featured: true,
+        category: 'web'
+    },
+    {
+        title: 'Crypto Pulse AI',
+        description: 'AI-powered cryptocurrency market intelligence platform featuring real-time price analytics, predictive market signals, order-book depth tracking, and sentiment indicators.',
+        technologies: ['TypeScript', 'React', 'Base44', 'AI/ML', 'Real-Time Data', 'Vite', 'TailwindCSS'],
+        github_url: 'https://github.com/SamMcfarlane-pursuit/cryptopulse-ai-copy',
+        live_url: null,
+        image: '/assets/projects/cryptopulse.webp',
+        status: 'completed',
+        year: 2026,
+        featured: true,
+        category: 'dataviz'
+    },
+    {
         title: 'AI-ML Learning Platform',
         description: 'Hands-on AI/ML learning platform powered by the Gemini API. Built to experiment with machine learning concepts, model integration, and prompt engineering workflows — deployed via Google AI Studio.',
         technologies: ['TypeScript', 'Gemini AI', 'React', 'Vite', 'Node.js'],
@@ -39,18 +63,6 @@ export const githubProjects = [
         year: 2025,
         featured: true,
         category: 'ai'
-    },
-    {
-        title: 'Crypto Pulse AI',
-        description: 'AI-powered cryptocurrency market intelligence platform featuring real-time price analytics, predictive market signals, order-book depth tracking, and sentiment indicators.',
-        technologies: ['TypeScript', 'React', 'Base44', 'AI/ML', 'Real-Time Data', 'Vite', 'TailwindCSS'],
-        github_url: 'https://github.com/SamMcfarlane-pursuit/cryptopulse-ai-copy',
-        live_url: null,
-        image: '/assets/projects/cryptopulse.webp',
-        status: 'completed',
-        year: 2026,
-        featured: true,
-        category: 'dataviz'
     },
     {
         title: 'McFarlane IDE Consulting',
@@ -86,18 +98,6 @@ export const githubProjects = [
         status: 'completed',
         year: 2025,
         featured: false,
-        category: 'web'
-    },
-    {
-        title: 'HVAC Hub',
-        description: 'Architected HVAC operating system: AI-powered job triage, NYC-optimized routing, graph database for parts compatibility.',
-        technologies: ['TypeScript', 'React Native', 'Node.js', 'Neo4j'],
-        github_url: 'https://github.com/SamMcfarlane-pursuit/HVAC-Hub-',
-        live_url: 'https://sam-hvac-hub.netlify.app',
-        image: '/assets/projects/hvac-hub.webp',
-        status: 'completed',
-        year: 2026,
-        featured: true,
         category: 'web'
     },
     {
@@ -188,35 +188,21 @@ export const githubProjects = [
 
 /**
  * Seeds the portfolio with GitHub project data.
- * This function is intended to be called by `initializeProjects`.
- * Smartly inserts new projects and updates existing ones to prevent duplicates.
+ * Always ensures localStorage is synchronized with the latest project definitions.
  */
 export async function seedProjects() {
     console.log('Seeding projects from GitHub data...');
 
-    const existing = await Project.list('', 1000);
-    const existingMap = new Map(existing.map(p => [p.title.toLowerCase().trim(), p]));
+    const projectsWithIds = githubProjects.map((p, index) => ({
+        ...p,
+        id: `proj_${p.title.toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
+        order: index,
+        created_at: new Date().toISOString()
+    }));
 
-    for (const projectData of githubProjects) {
-        try {
-            const key = projectData.title.toLowerCase().trim();
-            const existingProj = existingMap.get(key);
-            if (existingProj) {
-                // Update with newest definition while retaining internal id
-                await Project.update(existingProj.id, projectData);
-                console.log(`✓ Updated: ${projectData.title}`);
-            } else {
-                await Project.create(projectData);
-                console.log(`✓ Created: ${projectData.title}`);
-            }
-        } catch (error) {
-            console.error(`✗ Failed to seed ${projectData.title}:`, error);
-        }
-    }
-
-    // Mark as seeded
+    localStorage.setItem('mcfarlane_projects', JSON.stringify(projectsWithIds));
     localStorage.setItem('mcfarlane_projects_seeded', 'true');
-    console.log('✓ Project seeding complete!');
+    console.log('✓ Project seeding complete with fresh data!');
     return true;
 }
 
@@ -232,23 +218,9 @@ export async function forceSeedProjects() {
 
 /**
  * Initializes the project data based on the environment.
- * In DEV, it always re-seeds. In PROD, it seeds only once.
  */
 export async function initializeProjects() {
-    const SEED_FLAG = 'mcfarlane_projects_seeded';
-
-    // In development, always re-seed for fresh data
-    if (import.meta.env.DEV) {
-        await forceSeedProjects();
-        return;
-    }
-
-    // In production, only seed once
-    if (!localStorage.getItem(SEED_FLAG)) {
-        await seedProjects();
-    } else {
-        console.log('Projects already seeded.');
-    }
+    await seedProjects();
 }
 
 export default { githubProjects, seedProjects, forceSeedProjects, initializeProjects };
