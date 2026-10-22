@@ -93,7 +93,7 @@ export const githubProjects = [
         description: 'Architected HVAC operating system: AI-powered job triage, NYC-optimized routing, graph database for parts compatibility.',
         technologies: ['TypeScript', 'React Native', 'Node.js', 'Neo4j'],
         github_url: 'https://github.com/SamMcfarlane-pursuit/HVAC-Hub-',
-        live_url: 'https://hvac-hub-sams-projects-a99fd918.vercel.app',
+        live_url: 'https://sam-hvac-hub.netlify.app',
         image: '/assets/projects/hvac-hub.webp',
         status: 'completed',
         year: 2026,
